@@ -1,8 +1,21 @@
 {
   "version": 2,
-  "dgSpecHash": "P322jAAI/6WqIVoKXvgfcFuq1gTYBJyrEUCxJyMCxoGjhAwH1MOFtg3OCuhRZH91stVwgyw6GlKihcQaSlj/pQ==",
+  "dgSpecHash": "yqjrNA6zAULSewI1vPRpcW0p1VWJWNIKIZqJIc+LdxQLw+ibvKwEci+JstUburm+Qxtf8KyLkjgxrW7E/CRrzA==",
   "success": true,
   "projectFilePath": "C:\\Dev\\test\\Mundos\\Mundos.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\michal.brecka\\.nuget\\packages\\opentk\\4.8.1\\opentk.4.8.1.nupkg.sha512",
+    "C:\\Users\\michal.brecka\\.nuget\\packages\\opentk.audio.openal\\4.8.1\\opentk.audio.openal.4.8.1.nupkg.sha512",
+    "C:\\Users\\michal.brecka\\.nuget\\packages\\opentk.compute\\4.8.1\\opentk.compute.4.8.1.nupkg.sha512",
+    "C:\\Users\\michal.brecka\\.nuget\\packages\\opentk.core\\4.8.1\\opentk.core.4.8.1.nupkg.sha512",
+    "C:\\Users\\michal.brecka\\.nuget\\packages\\opentk.graphics\\4.8.1\\opentk.graphics.4.8.1.nupkg.sha512",
+    "C:\\Users\\michal.brecka\\.nuget\\packages\\opentk.input\\4.8.1\\opentk.input.4.8.1.nupkg.sha512",
+    "C:\\Users\\michal.brecka\\.nuget\\packages\\opentk.mathematics\\4.8.1\\opentk.mathematics.4.8.1.nupkg.sha512",
+    "C:\\Users\\michal.brecka\\.nuget\\packages\\opentk.redist.glfw\\3.3.8.39\\opentk.redist.glfw.3.3.8.39.nupkg.sha512",
+    "C:\\Users\\michal.brecka\\.nuget\\packages\\opentk.windowing.common\\4.8.1\\opentk.windowing.common.4.8.1.nupkg.sha512",
+    "C:\\Users\\michal.brecka\\.nuget\\packages\\opentk.windowing.desktop\\4.8.1\\opentk.windowing.desktop.4.8.1.nupkg.sha512",
+    "C:\\Users\\michal.brecka\\.nuget\\packages\\opentk.windowing.graphicslibraryframework\\4.8.1\\opentk.windowing.graphicslibraryframework.4.8.1.nupkg.sha512",
+    "C:\\Users\\michal.brecka\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512"
+  ],
   "logs": []
 }
