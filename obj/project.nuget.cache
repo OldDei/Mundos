@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "yqjrNA6zAULSewI1vPRpcW0p1VWJWNIKIZqJIc+LdxQLw+ibvKwEci+JstUburm+Qxtf8KyLkjgxrW7E/CRrzA==",
+  "dgSpecHash": "y/GFma5z6FX46RK6jbmntba6gI69NpdcyE42FFt5LIxfdUWcsUFZ4FTxYsRqcThMjBbD74xwp5q8BM0caqLOYA==",
   "success": true,
   "projectFilePath": "C:\\Dev\\test\\Mundos\\Mundos.csproj",
   "expectedPackageFiles": [
@@ -15,6 +15,7 @@
     "C:\\Users\\michal.brecka\\.nuget\\packages\\opentk.windowing.common\\4.8.1\\opentk.windowing.common.4.8.1.nupkg.sha512",
     "C:\\Users\\michal.brecka\\.nuget\\packages\\opentk.windowing.desktop\\4.8.1\\opentk.windowing.desktop.4.8.1.nupkg.sha512",
     "C:\\Users\\michal.brecka\\.nuget\\packages\\opentk.windowing.graphicslibraryframework\\4.8.1\\opentk.windowing.graphicslibraryframework.4.8.1.nupkg.sha512",
+    "C:\\Users\\michal.brecka\\.nuget\\packages\\stbimagesharp\\2.27.13\\stbimagesharp.2.27.13.nupkg.sha512",
     "C:\\Users\\michal.brecka\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512"
   ],
   "logs": []

@@ -29,3 +29,4 @@ C:\Dev\test\Mundos\obj\Debug\net7.0\refint\Mundos.dll
 C:\Dev\test\Mundos\obj\Debug\net7.0\Mundos.pdb
 C:\Dev\test\Mundos\obj\Debug\net7.0\Mundos.genruntimeconfig.cache
 C:\Dev\test\Mundos\obj\Debug\net7.0\ref\Mundos.dll
+C:\Dev\test\Mundos\bin\Debug\net7.0\StbImageSharp.dll
