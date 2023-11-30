@@ -83,9 +83,7 @@ namespace Mundos
 
                 // and then add it to the dictionary.
                 _uniformLocations.Add(key, location);
-                Console.WriteLine($"Loaded uniform {key} at location {location}");
             }
-            Console.WriteLine($"Loaded shader from {vertPath} and {fragPath}");
         }
 
         private static void CompileShader(int shader)
