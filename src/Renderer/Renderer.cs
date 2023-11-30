@@ -62,7 +62,7 @@ namespace Mundos
 
         private void DrawScene()
         {
-            throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
 
         protected override void OnResize(ResizeEventArgs e)
