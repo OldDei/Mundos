@@ -207,6 +207,7 @@ void main()
             {
                 _frameBegun = false;
                 ImGui.Render();
+
                 RenderImDrawData(ImGui.GetDrawData());
             }
         }
@@ -226,9 +227,6 @@ void main()
 
             _frameBegun = true;
             ImGui.NewFrame();
-
-            // ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
-            // ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.ViewportsEnable;
         }
 
         /// <summary>

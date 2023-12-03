@@ -60,7 +60,7 @@ namespace Mundos
             base.OnRenderFrame(e);
 
             // update delta time
-            _deltaTime += e.Time;
+            _deltaTime = e.Time;
             _controller.Update(this, (float)e.Time);
 
             // Physics update
@@ -72,13 +72,57 @@ namespace Mundos
             DrawScene();
 
             // ImGui update
-            ImGui.ShowDemoWindow();
+            UpdateImGui();
             _controller.Render();
 
             ImGuiController.CheckGLError("End of frame");
 
             // Swap the front and back buffers of the window
             SwapBuffers();
+        }
+
+        private void UpdateImGui()
+        {
+            // Debug window
+            ImGui.Begin("Debug");
+            double fps = Math.Round(FPSAverage());
+            ImGui.Text($"FPS: {fps}");
+
+            // Scene tree view tab
+            if (ImGui.BeginTabBar("Mundos"))
+            {
+                ImGui.BeginTabItem("Scene");
+                {
+                    if (_scene != null)
+                        _scene.DrawSceneTree();
+                    else
+                        ImGui.Text("No scene loaded.");
+                    ImGui.EndTabItem();
+                }
+                ImGui.EndTabBar();
+            }
+
+            ImGui.End();
+
+            // Store current frame time
+            _frameTimes[_frameIndex] = _deltaTime;
+            _frameIndex = (_frameIndex + 1) % MaxFrameCount;
+        }
+
+        private const int MaxFrameCount = 120; // Number of frames to consider for average calculation
+        private double[] _frameTimes = new double[MaxFrameCount];
+        private int _frameIndex = 0;
+        private double FPSAverage()
+        {
+            double frameTimeSum = 0;
+            int frameCount = Math.Min(_frameIndex, MaxFrameCount);
+            for (int i = 0; i < frameCount; i++)
+            {
+                frameTimeSum += _frameTimes[i];
+            }
+            double averageFrameTime = frameTimeSum / frameCount;
+            double averageFPS = 1 / averageFrameTime;
+            return averageFPS;
         }
 
         private void DrawScene()
@@ -194,7 +238,7 @@ namespace Mundos
             if (_scene == null)
                 return;
 
-            _scene.AddNode(new Model(_scene.GetNode(0), "Model Test Node", Vector3.Zero, Vector3.Zero, Vector3.One)); // Create a model object
+            _scene.AddNode(new Model(_scene.GetRootNode(), "Model Test Node", Vector3.Zero, Vector3.Zero, Vector3.One)); // Create a model object
         }
     }
 }

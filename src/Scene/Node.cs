@@ -1,3 +1,4 @@
+using ImGuiNET;
 using OpenTK.Mathematics;
 
 namespace Mundos
@@ -44,6 +45,18 @@ namespace Mundos
             foreach (Node child in _children)
             {
                 child.Draw(renderer); // Draw the children
+            }
+        }
+
+        internal void DrawTreeNode()
+        {
+            if (ImGui.TreeNode(_name))
+            {
+                foreach (Node child in _children)
+                {
+                    child.DrawTreeNode();
+                }
+                ImGui.TreePop();
             }
         }
     }

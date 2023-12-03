@@ -32,22 +32,16 @@ namespace Mundos
 
     public class Scene
     {
-        readonly List<Node> _nodes;
+        Node _rootNode;
 
         public Scene()
         {
-            _nodes = new List<Node>();
-            _nodes.Add(new Node(null, "Root Node", Vector3.Zero, Vector3.Zero, Vector3.One));
+            _rootNode = new Node(null, "Root Node", Vector3.Zero, Vector3.Zero, Vector3.One);
         }
 
         public void AddNode(Node node)
         {
-            _nodes.Add(node);
-        }
-
-        public void DestroyNode(Node node)
-        {
-            _nodes.Remove(node);
+            _rootNode.AddChild(node);
         }
 
         /// <summary>
@@ -57,27 +51,14 @@ namespace Mundos
         /// <returns>The node with the specified name, or null if no node is found.</returns>
         public Node? GetNode(string name)
         {
-            foreach (Node node in _nodes)
-            {
-                if (node._name == name)
-                {
-                    return node;
-                }
-            }
+            // TODO: Implement this
 
             return null;
         }
 
-        /// <summary>
-        /// Retrieves the node at the specified index. To get the root node, use index 0.
-        /// </summary>
-        /// <param name="index">The index of the node to retrieve.</param>
-        /// <returns>The node at the specified index.</returns>
-        public Node? GetNode(int index)
+        public Node GetRootNode()
         {
-            if (index < 0 || index >= _nodes.Count)
-                return null;
-            return _nodes[index];
+            return _rootNode;
         }
 
         /// <summary>
@@ -85,10 +66,12 @@ namespace Mundos
         /// </summary>
         public void Draw(Renderer renderer)
         {
-            foreach (Node node in _nodes)
-            {
-                node.Draw(renderer);
-            }
+            _rootNode.Draw(renderer);
+        }
+
+        public void DrawSceneTree()
+        {
+            _rootNode.DrawTreeNode();
         }
     }
 }
