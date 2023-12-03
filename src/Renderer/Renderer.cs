@@ -15,18 +15,40 @@ namespace Mundos
         private int _elementBufferObject;
         private Shader _shaderDefault;
         private Camera _camera;
+        private Scene? _scene;
 
-        public Renderer(int width, int height, string title) : base(GameWindowSettings.Default, new NativeWindowSettings() { Size = (width, height), Title = title })
+        public Renderer(int width, int height, string title, SceneManager sceneManager) : base(GameWindowSettings.Default, new NativeWindowSettings() { Size = (width, height), Title = title })
         {
             _deltaTime = 0.0; // Time between current frame and last frame
-            _camera = new Camera(Vector3.Zero, Size.X / (float)Size.Y); // Create a camera object at the origin
-            _shaderDefault = new Shader("src/Renderer/Shaders/shaderDefault.vert", "src/Renderer/Shaders/shaderDefault.frag"); // Create a default shader object
+            _camera = new Camera(new Vector3(0.0f, 0.0f, 3.0f), Size.X / (float)Size.Y); // Create a camera object at the origin
+            _shaderDefault = new Shader(); // Create a default shader object
+
+            LoadScene(sceneManager);
+
+            Debug.WriteLine("Renderer initialized.");
         }
 
         protected override void OnLoad()
         {
             base.OnLoad();
 
+            // Set the clear color to a dark grey
+            GL.ClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+
+            _vertexBufferObject = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
+
+            _vertexArrayObject = GL.GenVertexArray();
+            GL.BindVertexArray(_vertexArrayObject);
+
+            _elementBufferObject = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
+
+            Vector3 defaultColor = new Vector3(0.5f, 0.2f, 0.2f);
+            // _shaderDefault.SetVector3("defaultColor", defaultColor);
+
+            // We enable depth testing here
+            GL.Enable(EnableCap.DepthTest);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -40,19 +62,6 @@ namespace Mundos
             // Clear the screen
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            _vertexArrayObject = GL.GenVertexArray();
-            GL.BindVertexArray(_vertexArrayObject);
-
-            _vertexBufferObject = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
-
-            _elementBufferObject = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
-
-            Vector3 defaultColor = new Vector3(0.5f, 0.2f, 0.2f);
-            _shaderDefault.Use();
-            _shaderDefault.SetVector3("defaultColor", defaultColor);
-
             var model = Matrix4.Identity;
 
             DrawScene();
@@ -62,7 +71,8 @@ namespace Mundos
 
         private void DrawScene()
         {
-            // throw new NotImplementedException();
+            if (_scene != null)
+                _scene.Draw(this);
         }
 
         protected override void OnResize(ResizeEventArgs e)
@@ -100,6 +110,63 @@ namespace Mundos
 
             GL.BindVertexArray(0);
             GL.DeleteVertexArray(_vertexArrayObject);
+        }
+
+        public void DrawMesh(Mesh model)
+        {
+            // Data to retrieve
+            // List<Mesh.Vertex> vertices;
+            // List<uint> indices;
+            // List<Texture> textures;
+
+            // Get the data from the model
+            // model.GetDrawData(out vertices, out indices, out textures);
+
+            float[] vertices = {
+                0.5f,  0.5f, 0.0f,  // top right
+                0.5f, -0.5f, 0.0f,  // bottom right
+                -0.5f, -0.5f, 0.0f,  // bottom left
+                -0.5f,  0.5f, 0.0f   // top left
+            };
+            uint[] indices = {  // note that we start from 0!
+                0, 1, 3,   // first triangle
+                1, 2, 3    // second triangle
+            };
+
+            GL.EnableVertexAttribArray(0);
+
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
+            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
+
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
+
+            _shaderDefault.SetMatrix4("model", Matrix4.Identity);
+            _shaderDefault.SetMatrix4("view", _camera.GetViewMatrix());
+            _shaderDefault.SetMatrix4("projection", _camera.GetProjectionMatrixPerspective());
+            _shaderDefault.Use();
+
+            GL.BindVertexArray(_vertexArrayObject);
+
+            GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
+
+            GL.BindVertexArray(0);
+        }
+
+        public void SetScene(Scene? scene)
+        {
+            _scene = scene;
+        }
+
+        private void LoadScene(SceneManager sceneManager)
+        {
+            _scene = sceneManager.GetScene(0); // Create a scene object
+
+            if (_scene == null)
+                return;
+
+            _scene.AddNode(new Model(_scene.GetNode(0), "Model Test Node", Vector3.Zero, Vector3.Zero, Vector3.One)); // Create a model object
         }
     }
 }

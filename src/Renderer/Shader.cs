@@ -10,6 +10,9 @@ namespace Mundos
     // A simple class meant to help create shaders.
     public class Shader
     {
+        private const string defaultShaderPathVert = "src/Renderer/Shaders/shaderDefault.vert";
+        private const string defaultShaderPathFrag = "src/Renderer/Shaders/shaderDefault.frag";
+
         public readonly int Handle;
 
         private readonly Dictionary<string, int> _uniformLocations;
@@ -18,7 +21,7 @@ namespace Mundos
         // Shaders are written in GLSL, which is a language very similar to C in its semantics.
         // The GLSL source is compiled *at runtime*, so it can optimize itself for the graphics card it's currently being used on.
         // A commented example of GLSL can be found in shader.vert.
-        public Shader(string vertPath, string fragPath)
+        public Shader(string vertPath = defaultShaderPathVert, string fragPath = defaultShaderPathFrag)
         {
             // There are several different types of shaders, but the only two you need for basic rendering are the vertex and fragment shaders.
             // The vertex shader is responsible for moving around vertices, and uploading that data to the fragment shader.

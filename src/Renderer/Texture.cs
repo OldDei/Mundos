@@ -4,13 +4,21 @@ using System.Drawing.Imaging;
 using PixelFormat = OpenTK.Graphics.OpenGL4.PixelFormat;
 using StbImageSharp;
 using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace Mundos
 {
     // A helper class, much like Shader, meant to simplify loading textures.
     public class Texture
     {
-        public readonly int Handle;
+        public enum TextureType
+        {
+            Diffuse,
+            Specular
+        }
+
+        public int Handle;
+        public TextureType Type;
 
         public static Texture LoadFromFile(string path)
         {
@@ -73,9 +81,10 @@ namespace Mundos
             return new Texture(handle);
         }
 
-        public Texture(int glHandle)
+        public Texture(int glHandle, TextureType type = TextureType.Diffuse)
         {
             Handle = glHandle;
+            Type = type;
         }
 
         // Activate texture
