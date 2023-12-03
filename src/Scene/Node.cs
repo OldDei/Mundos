@@ -7,9 +7,9 @@ namespace Mundos
     {
         public string _name;
 
-        Vector3 _position;
-        Vector3 _rotation;
-        Vector3 _scale;
+        System.Numerics.Vector3 _position;
+        System.Numerics.Vector3 _rotation;
+        System.Numerics.Vector3 _scale;
 
         readonly Node? _parent;
         readonly List<Node> _children;
@@ -17,9 +17,9 @@ namespace Mundos
         public Node(Node? parent, string name, Vector3 position, Vector3 rotation, Vector3 scale)
         {
             _parent = parent;
-            _position = position;
-            _rotation = rotation;
-            _scale = scale;
+            _position = new System.Numerics.Vector3(position.X, position.Y, position.Z);
+            _rotation = new System.Numerics.Vector3(rotation.X, rotation.Y, rotation.Z);
+            _scale = new System.Numerics.Vector3(scale.X, scale.Y, scale.Z);
             _name = name;
 
             _children = new List<Node>();
@@ -48,10 +48,15 @@ namespace Mundos
             }
         }
 
-        internal void DrawTreeNode()
+        virtual public void DrawTreeNode()
         {
             if (ImGui.TreeNode(_name))
             {
+                // Every node has a name, position, rotation, and scale
+                ImGui.DragFloat3("Position", ref _position);
+                ImGui.DragFloat3("Rotation", ref _rotation);
+                ImGui.DragFloat3("Scale",    ref _scale);
+
                 foreach (Node child in _children)
                 {
                     child.DrawTreeNode();
