@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "Qb9VWrojae6yjAWX+6YvnHd/p06AFd25q0IinS89qG+Kc/DKU8j90r8d16FV6z3bhCt/dKuwe3/xAucQohYX2Q==",
+  "dgSpecHash": "N4MmhkYXgU++g6SvktYAnYFOSdESv/pMq+x5DEzR3fN5TWiKyWxO1sQTnnkI3nLRrVoLxxSNKeZbx7wkdjUs0Q==",
   "success": true,
   "projectFilePath": "C:\\dev\\Mundos\\Mundos.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Michal\\.nuget\\packages\\imgui.net.docking\\1.75.0\\imgui.net.docking.1.75.0.nupkg.sha512",
     "C:\\Users\\Michal\\.nuget\\packages\\opentk\\4.8.1\\opentk.4.8.1.nupkg.sha512",
     "C:\\Users\\Michal\\.nuget\\packages\\opentk.audio.openal\\4.8.1\\opentk.audio.openal.4.8.1.nupkg.sha512",
     "C:\\Users\\Michal\\.nuget\\packages\\opentk.compute\\4.8.1\\opentk.compute.4.8.1.nupkg.sha512",
@@ -16,6 +17,8 @@
     "C:\\Users\\Michal\\.nuget\\packages\\opentk.windowing.desktop\\4.8.1\\opentk.windowing.desktop.4.8.1.nupkg.sha512",
     "C:\\Users\\Michal\\.nuget\\packages\\opentk.windowing.graphicslibraryframework\\4.8.1\\opentk.windowing.graphicslibraryframework.4.8.1.nupkg.sha512",
     "C:\\Users\\Michal\\.nuget\\packages\\stbimagesharp\\2.27.13\\stbimagesharp.2.27.13.nupkg.sha512",
+    "C:\\Users\\Michal\\.nuget\\packages\\system.buffers\\4.4.0\\system.buffers.4.4.0.nupkg.sha512",
+    "C:\\Users\\Michal\\.nuget\\packages\\system.numerics.vectors\\4.4.0\\system.numerics.vectors.4.4.0.nupkg.sha512",
     "C:\\Users\\Michal\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512"
   ],
   "logs": []

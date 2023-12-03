@@ -1,3 +1,4 @@
+using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -16,6 +17,7 @@ namespace Mundos
         private Shader _shaderDefault;
         private Camera _camera;
         private Scene? _scene;
+        ImGuiController _controller;
 
         public Renderer(int width, int height, string title, SceneManager sceneManager) : base(GameWindowSettings.Default, new NativeWindowSettings() { Size = (width, height), Title = title })
         {
@@ -24,6 +26,8 @@ namespace Mundos
             _shaderDefault = new Shader(); // Create a default shader object
 
             LoadScene(sceneManager);
+
+            _controller = new ImGuiController(width, height);
 
             Debug.WriteLine("Renderer initialized.");
         }
@@ -55,17 +59,25 @@ namespace Mundos
         {
             base.OnRenderFrame(e);
 
+            // update delta time
             _deltaTime += e.Time;
+            _controller.Update(this, (float)e.Time);
 
             // Physics update
 
             // Clear the screen
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            var model = Matrix4.Identity;
-
+            // Draw the scene
             DrawScene();
 
+            // ImGui update
+            ImGui.ShowDemoWindow();
+            _controller.Render();
+
+            ImGuiController.CheckGLError("End of frame");
+
+            // Swap the front and back buffers of the window
             SwapBuffers();
         }
 
@@ -81,6 +93,8 @@ namespace Mundos
 
             GL.Viewport(0, 0, e.Width, e.Height);
             _camera.AspectRatio = Size.X / (float)Size.Y;
+
+            _controller.WindowResized(ClientSize.X, ClientSize.Y);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
@@ -98,6 +112,20 @@ namespace Mundos
             {
                 Close();
             }
+        }
+
+        protected override void OnTextInput(TextInputEventArgs e)
+        {
+            base.OnTextInput(e);
+
+            _controller.PressChar((char)e.Unicode);
+        }
+
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
+        {
+            base.OnMouseWheel(e);
+
+            _controller.MouseScroll(e.Offset);
         }
 
         protected override void OnUnload()
