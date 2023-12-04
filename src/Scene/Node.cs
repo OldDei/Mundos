@@ -7,9 +7,9 @@ namespace Mundos
     {
         public string _name;
 
-        System.Numerics.Vector3 _position;
-        System.Numerics.Vector3 _rotation;
-        System.Numerics.Vector3 _scale;
+        public System.Numerics.Vector3 _position;
+        public System.Numerics.Vector3 _rotation;
+        public System.Numerics.Vector3 _scale;
         private Scene _scene;
         readonly Node? _parent;
         readonly List<Node> _children;
@@ -53,6 +53,11 @@ namespace Mundos
             ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.OpenOnDoubleClick | (SceneManager.GetSelectedNode() == this ? ImGuiTreeNodeFlags.Selected : 0);
             if (ImGui.TreeNodeEx(_name, nodeFlags))
             {
+                // Every node has a name, position, rotation, and scale
+                ImGui.DragFloat3("Position", ref _position);
+                ImGui.DragFloat3("Rotation", ref _rotation);
+                ImGui.DragFloat3("Scale",    ref _scale);
+
                 if (ImGui.IsItemClicked()){
                     SceneManager.SetSelectedNode(this);
                     Console.WriteLine("Selected node: " + _name);
@@ -64,6 +69,21 @@ namespace Mundos
                 }
                 ImGui.TreePop();
             }
+        }
+
+        internal Vector3 GetScale()
+        {
+            return new Vector3(_scale.X, _scale.Y, _scale.Z) + _parent?.GetScale() ?? Vector3.Zero;
+        }
+
+        internal Vector3 GetRotation()
+        {
+            return new Vector3(_rotation.X, _rotation.Y, _rotation.Z) + _parent?.GetRotation() ?? Vector3.Zero;
+        }
+
+        internal Vector3 GetPosition()
+        {
+            return new Vector3(_position.X, _position.Y, _position.Z) + _parent?.GetPosition() ?? Vector3.Zero;
         }
     }
 }

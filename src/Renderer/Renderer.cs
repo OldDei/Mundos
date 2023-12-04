@@ -184,26 +184,15 @@ namespace Mundos
             GL.DeleteVertexArray(_vertexArrayObject);
         }
 
-        public void DrawMesh(Mesh model)
+        public void DrawMesh(Mesh mesh)
         {
             // Data to retrieve
-            // List<Mesh.Vertex> vertices;
-            // List<uint> indices;
-            // List<Texture> textures;
+            float[] vertices;
+            uint[] indices;
+            List<Texture> textures;
 
             // Get the data from the model
-            // model.GetDrawData(out vertices, out indices, out textures);
-
-            float[] vertices = {
-                0.5f,  0.5f, 0.0f,  // top right
-                0.5f, -0.5f, 0.0f,  // bottom right
-                -0.5f, -0.5f, 0.0f,  // bottom left
-                -0.5f,  0.5f, 0.0f   // top left
-            };
-            uint[] indices = {  // note that we start from 0!
-                0, 1, 3,   // first triangle
-                1, 2, 3    // second triangle
-            };
+            mesh.GetDrawData(out vertices, out indices, out textures);
 
             GL.EnableVertexAttribArray(0);
 
@@ -214,7 +203,7 @@ namespace Mundos
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
             GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
 
-            _shaderDefault.SetMatrix4("model", Matrix4.Identity);
+            _shaderDefault.SetMatrix4("model", mesh.GetMeshTransformMatrix());
             _shaderDefault.SetMatrix4("view", _camera.GetViewMatrix());
             _shaderDefault.SetMatrix4("projection", _camera.GetProjectionMatrixPerspective());
             _shaderDefault.Use();
