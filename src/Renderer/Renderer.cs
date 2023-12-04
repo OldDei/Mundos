@@ -19,13 +19,13 @@ namespace Mundos
         private Scene? _scene;
         ImGuiController _controller;
 
-        public Renderer(int width, int height, string title, SceneManager sceneManager) : base(GameWindowSettings.Default, new NativeWindowSettings() { Size = (width, height), Title = title })
+        public Renderer(int width, int height, string title) : base(GameWindowSettings.Default, new NativeWindowSettings() { Size = (width, height), Title = title })
         {
             _deltaTime = 0.0; // Time between current frame and last frame
             _camera = new Camera(new Vector3(0.0f, 0.0f, 3.0f), Size.X / (float)Size.Y); // Create a camera object at the origin
             _shaderDefault = new Shader(); // Create a default shader object
 
-            LoadScene(sceneManager);
+            LoadScene();
 
             _controller = new ImGuiController(width, height);
 
@@ -231,14 +231,15 @@ namespace Mundos
             _scene = scene;
         }
 
-        private void LoadScene(SceneManager sceneManager)
+        private void LoadScene()
         {
-            _scene = sceneManager.GetScene(0); // Create a scene object
+            _scene = SceneManager.GetScene(0); // Create a scene object
 
             if (_scene == null)
                 return;
 
-            _scene.AddNode(new Model(_scene.GetRootNode(), "Model Test Node", Vector3.Zero, Vector3.Zero, Vector3.One)); // Create a model object
+            _scene.AddNode(new Model(_scene.GetRootNode(), "Model Test Node 1", Vector3.Zero, Vector3.Zero, Vector3.One)); // Create a model object
+            _scene.AddNode(new Model(_scene.GetRootNode(), "Model Test Node 2", Vector3.Zero, Vector3.Zero, Vector3.One)); // Create a model object
         }
     }
 }

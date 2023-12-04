@@ -10,7 +10,7 @@ namespace Mundos
         System.Numerics.Vector3 _position;
         System.Numerics.Vector3 _rotation;
         System.Numerics.Vector3 _scale;
-
+        private Scene _scene;
         readonly Node? _parent;
         readonly List<Node> _children;
 
@@ -50,12 +50,13 @@ namespace Mundos
 
         virtual public void DrawTreeNode()
         {
-            if (ImGui.TreeNode(_name))
+            ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.OpenOnDoubleClick | (SceneManager.GetSelectedNode() == this ? ImGuiTreeNodeFlags.Selected : 0);
+            if (ImGui.TreeNodeEx(_name, nodeFlags))
             {
-                // Every node has a name, position, rotation, and scale
-                ImGui.DragFloat3("Position", ref _position);
-                ImGui.DragFloat3("Rotation", ref _rotation);
-                ImGui.DragFloat3("Scale",    ref _scale);
+                if (ImGui.IsItemClicked()){
+                    SceneManager.SetSelectedNode(this);
+                    Console.WriteLine("Selected node: " + _name);
+                }
 
                 foreach (Node child in _children)
                 {

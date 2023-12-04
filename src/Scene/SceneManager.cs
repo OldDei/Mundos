@@ -2,31 +2,43 @@ using OpenTK.Mathematics;
 
 namespace Mundos
 {
-    public class SceneManager
+    public static class SceneManager
     {
-        readonly List<Scene> _scenes;
+        readonly static List<Scene> _scenes;
+        static Node _selectedNode;
 
-        public SceneManager()
+        static SceneManager()
         {
             _scenes = new List<Scene>();
             _scenes.Add(new Scene());
+            _selectedNode = _scenes[0].GetRootNode();
         }
 
-        public void AddScene(Scene scene)
+        public static void AddScene(Scene scene)
         {
             _scenes.Add(scene);
         }
 
-        public void DestroyScene(Scene scene)
+        public static void DestroyScene(Scene scene)
         {
             _scenes.Remove(scene);
         }
 
-        public Scene? GetScene(int index)
+        public static Scene? GetScene(int index)
         {
             if (index < 0 || index >= _scenes.Count)
                 return null;
             return _scenes[index];
+        }
+
+        public static Node GetSelectedNode()
+        {
+            return _selectedNode;
+        }
+
+        public static void SetSelectedNode(Node node)
+        {
+            _selectedNode = node;
         }
     }
 
