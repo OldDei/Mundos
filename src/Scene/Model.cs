@@ -2,6 +2,9 @@ using OpenTK.Mathematics;
 
 namespace Mundos
 {
+    /// <summary>
+    /// Represents a model in the Mundos scene.
+    /// </summary>
     public class Model : Node
     {
         Mesh _mesh;
@@ -13,31 +16,33 @@ namespace Mundos
             _shader = new Shader();
         }
 
+        /// <summary>
+        /// Sets a new mesh for the model.
+        /// </summary>
+        /// <param name="mesh">The mesh to set.</param>
         public void SetMesh(Mesh mesh)
         {
             _mesh = mesh;
         }
 
+        /// <summary>
+        /// Sets the shader for the model.
+        /// TODO: Actually implement using the shader?
+        /// </summary>
+        /// <param name="shader">The shader to set.</param>
         public void SetShader(Shader shader)
         {
             _shader = shader;
         }
 
+        /// <summary>
+        /// Draws the mesh of the model using the specified renderer.
+        /// </summary>
+        /// <param name="renderer">The renderer used to draw the model.</param>
         override public void Draw(Renderer renderer)
         {
             base.Draw(renderer);
             _mesh.Draw(renderer); // Draw the mesh with the shader
-        }
-
-        public Matrix4 GetModelMatrix()
-        {
-            Matrix4 model = Matrix4.Identity;
-            model *= Matrix4.CreateScale(_scale.X, _scale.Y, _scale.Z);
-            model *= Matrix4.CreateRotationX(_rotation.X);
-            model *= Matrix4.CreateRotationY(_rotation.Y);
-            model *= Matrix4.CreateRotationZ(_rotation.Z);
-            model *= Matrix4.CreateTranslation(_position.X, _position.Y, _position.Z);
-            return model;
         }
     }
 }

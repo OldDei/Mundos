@@ -25,7 +25,7 @@ namespace Mundos
             _camera = new Camera(new Vector3(0.0f, 0.0f, 3.0f), Size.X / (float)Size.Y); // Create a camera object at the origin
             _shaderDefault = new Shader(); // Create a default shader object
 
-            LoadScene();
+            SceneManager.LoadScene();
 
             _controller = new ImGuiController(width, height);
 
@@ -81,6 +81,10 @@ namespace Mundos
             SwapBuffers();
         }
 
+        /// <summary>
+        /// Updates the ImGui user interface.
+        /// TODO: This should probably be moved to a separate class.
+        /// </summary>
         private void UpdateImGui()
         {
             // Debug window
@@ -125,6 +129,10 @@ namespace Mundos
             return averageFPS;
         }
 
+        /// <summary>
+        /// Draws the current scene.
+        /// If no scene is loaded, nothing is drawn.
+        /// </summary>
         private void DrawScene()
         {
             if (_scene != null)
@@ -184,15 +192,14 @@ namespace Mundos
             GL.DeleteVertexArray(_vertexArrayObject);
         }
 
+        /// <summary>
+        /// Draws a mesh on the screen.
+        /// </summary>
+        /// <param name="mesh">The mesh to be drawn.</param>
         public void DrawMesh(Mesh mesh)
         {
-            // Data to retrieve
-            float[] vertices;
-            uint[] indices;
-            List<Texture> textures;
-
             // Get the data from the model
-            mesh.GetDrawData(out vertices, out indices, out textures);
+            mesh.GetDrawData(out float[] vertices, out uint[] indices, out List<Texture> textures);
 
             GL.EnableVertexAttribArray(0);
 
@@ -215,20 +222,13 @@ namespace Mundos
             GL.BindVertexArray(0);
         }
 
+        /// <summary>
+        /// Sets the current scene for rendering.
+        /// </summary>
+        /// <param name="scene">The scene to set. This can be null.</param>
         public void SetScene(Scene? scene)
         {
             _scene = scene;
-        }
-
-        private void LoadScene()
-        {
-            _scene = SceneManager.GetScene(0); // Create a scene object
-
-            if (_scene == null)
-                return;
-
-            _scene.AddNode(new Model(_scene.GetRootNode(), "Model Test Node 1", Vector3.Zero, Vector3.Zero, Vector3.One)); // Create a model object
-            _scene.AddNode(new Model(_scene.GetRootNode(), "Model Test Node 2", Vector3.Zero, Vector3.Zero, Vector3.One)); // Create a model object
         }
     }
 }

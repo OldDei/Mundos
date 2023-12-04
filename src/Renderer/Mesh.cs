@@ -4,10 +4,22 @@ using OpenTK.Mathematics;
 
 namespace Mundos
 {
+    /// <summary>
+    /// Represents a mesh object that contains vertex and index data, as well as textures and a parent node.
+    /// </summary>
     public class Mesh
     {
+        /// <summary>
+        /// Represents a vertex in a mesh.
+        /// </summary>
         public struct Vertex
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Vertex"/> struct.
+            /// </summary>
+            /// <param name="position">The position of the vertex.</param>
+            /// <param name="normal">The normal vector of the vertex.</param>
+            /// <param name="texCoords">The texture coordinates of the vertex.</param>
             public Vertex(Vector3 position, Vector3 normal, Vector2 texCoords)
             {
                 Position = position;
@@ -16,7 +28,9 @@ namespace Mundos
             }
 
             public Vector3 Position;
+
             public Vector3 Normal;
+
             public Vector2 TexCoords;
         }
 
@@ -45,11 +59,22 @@ namespace Mundos
             };
         }
 
+        /// <summary>
+        /// Draws the mesh using the specified renderer.
+        /// TODO: Is the mesh visible? Culling or something?
+        /// </summary>
+        /// <param name="renderer">The renderer to use for drawing.</param>
         public void Draw(Renderer renderer)
         {
             renderer.DrawMesh(this);
         }
 
+        /// <summary>
+        /// Retrieves the draw data of the mesh.
+        /// </summary>
+        /// <param name="vertices">The array of vertices.</param>
+        /// <param name="indices">The array of indices.</param>
+        /// <param name="textures">The list of textures.</param>
         public void GetDrawData(out float[] vertices, out uint[] indices, out List<Texture> textures)
         {
             vertices = this.vertices;
@@ -57,6 +82,10 @@ namespace Mundos
             textures = this.textures;
         }
 
+        /// <summary>
+        /// Returns a 4x4 matrix used for transformations in rendering.
+        /// TODO: Optimize by caching the matrix and only updating it when necessary.
+        /// </summary>
         internal Matrix4 GetMeshTransformMatrix()
         {
             Matrix4 model = Matrix4.Identity;
@@ -71,6 +100,7 @@ namespace Mundos
             model *= Matrix4.CreateRotationY(_rotation.Y);
             model *= Matrix4.CreateRotationZ(_rotation.Z);
             model *= Matrix4.CreateTranslation(_position.X, _position.Y, _position.Z);
+
             return model;
         }
     }

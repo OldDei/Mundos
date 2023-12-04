@@ -3,6 +3,9 @@ using OpenTK.Mathematics;
 
 namespace Mundos
 {
+    /// <summary>
+    /// Represents a node in a scene hierarchy.
+    /// </summary>
     public class Node
     {
         public string _name;
@@ -10,7 +13,6 @@ namespace Mundos
         public System.Numerics.Vector3 _position;
         public System.Numerics.Vector3 _rotation;
         public System.Numerics.Vector3 _scale;
-        private Scene _scene;
         readonly Node? _parent;
         readonly List<Node> _children;
 
@@ -25,11 +27,19 @@ namespace Mundos
             _children = new List<Node>();
         }
 
+        /// <summary>
+        /// Adds a child node to the current node.
+        /// </summary>
+        /// <param name="child">The child node to add.</param>
         public void AddChild(Node child)
         {
             _children.Add(child);
         }
 
+        /// <summary>
+        /// Destroys a child node by removing it from the list of children.
+        /// </summary>
+        /// <param name="child">The child node to destroy.</param>
         public void DestroyChild(Node child)
         {
             _children.Remove(child);
@@ -48,6 +58,10 @@ namespace Mundos
             }
         }
 
+        /// <summary>
+        /// Draws the tree node for the current node in the scene.
+        /// TODO: Move to a separate class?
+        /// </summary>
         virtual public void DrawTreeNode()
         {
             ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.OpenOnDoubleClick | (SceneManager.GetSelectedNode() == this ? ImGuiTreeNodeFlags.Selected : 0);
@@ -60,7 +74,6 @@ namespace Mundos
 
                 if (ImGui.IsItemClicked()){
                     SceneManager.SetSelectedNode(this);
-                    Console.WriteLine("Selected node: " + _name);
                 }
 
                 foreach (Node child in _children)

@@ -40,6 +40,22 @@ namespace Mundos
         {
             _selectedNode = node;
         }
+
+        /// <summary>
+        /// Loads a scene from the specified path.
+        /// TODO: Actually implement this
+        /// </summary>
+        /// <param name="path">The path of the scene to load.</param>
+        internal static void LoadScene(string path)
+        {
+            Scene? scene = GetScene(0); // Create a scene object
+
+            if (scene == null)
+                return;
+
+            scene.AddNode(new Model(scene.GetRootNode(), "Model Test Node 1", Vector3.Zero, Vector3.Zero, Vector3.One)); // Create a model object
+            scene.AddNode(new Model(scene.GetRootNode(), "Model Test Node 2", Vector3.Zero, Vector3.Zero, Vector3.One)); // Create a model object
+        }
     }
 
     public class Scene
@@ -58,13 +74,12 @@ namespace Mundos
 
         /// <summary>
         /// Retrieves a node with the specified name.
+        /// TODO: Actually implement this
         /// </summary>
         /// <param name="name">The name of the node to retrieve.</param>
         /// <returns>The node with the specified name, or null if no node is found.</returns>
         public Node? GetNode(string name)
         {
-            // TODO: Implement this
-
             return null;
         }
 
@@ -81,6 +96,10 @@ namespace Mundos
             _rootNode.Draw(renderer);
         }
 
+        /// <summary>
+        /// Draws the scene tree by calling the DrawTreeNode method on the root node.
+        /// The Draw call will then propagate to all the children of the root node.
+        /// </summary>
         public void DrawSceneTree()
         {
             _rootNode.DrawTreeNode();
