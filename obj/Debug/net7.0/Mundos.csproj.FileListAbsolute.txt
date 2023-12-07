@@ -67,3 +67,9 @@ C:\dev\Mundos\bin\Debug\net7.0\runtimes\linux-x64\native\libcimgui.so
 C:\dev\Mundos\bin\Debug\net7.0\runtimes\osx-x64\native\libcimgui.dylib
 C:\dev\Mundos\bin\Debug\net7.0\runtimes\win-x64\native\cimgui.dll
 C:\dev\Mundos\bin\Debug\net7.0\runtimes\win-x86\native\cimgui.dll
+C:\dev\Mundos\bin\Debug\net7.0\Arch.dll
+C:\dev\Mundos\bin\Debug\net7.0\Arch.LowLevel.dll
+C:\dev\Mundos\bin\Debug\net7.0\Collections.Pooled.dll
+C:\dev\Mundos\bin\Debug\net7.0\CommunityToolkit.HighPerformance.dll
+C:\dev\Mundos\bin\Debug\net7.0\Microsoft.Extensions.ObjectPool.dll
+C:\dev\Mundos\bin\Debug\net7.0\JobScheduler.dll

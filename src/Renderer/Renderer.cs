@@ -1,3 +1,4 @@
+using Arch.Core;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -5,6 +6,7 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Mundos
 {
@@ -16,7 +18,7 @@ namespace Mundos
         private int _elementBufferObject;
         private Shader _shaderDefault;
         private Camera _camera;
-        private Scene? _scene;
+        private World _world;
         ImGuiController _controller;
 
         public Renderer(int width, int height, string title) : base(GameWindowSettings.Default, new NativeWindowSettings() { Size = (width, height), Title = title })
@@ -25,7 +27,7 @@ namespace Mundos
             _camera = new Camera(new Vector3(0.0f, 0.0f, 3.0f), Size.X / (float)Size.Y); // Create a camera object at the origin
             _shaderDefault = new Shader(); // Create a default shader object
 
-            SceneManager.LoadScene();
+            _world = WorldManager.World;
 
             _controller = new ImGuiController(width, height);
 
@@ -68,8 +70,8 @@ namespace Mundos
             // Clear the screen
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            // Draw the scene
-            DrawScene();
+            // Draw the world
+            DrawWorld();
 
             // ImGui update
             UpdateImGui();
@@ -91,16 +93,29 @@ namespace Mundos
             ImGui.Begin("Debug");
             double fps = Math.Round(FPSAverage());
             ImGui.Text($"FPS: {fps}");
+            ImGui.Separator();
 
-            // Scene tree view tab
+            // World management buttons
+            if (ImGui.Button("Save world"))
+            {
+                WorldManager.SaveWorld("world.xml");
+            }
+            ImGui.SameLine();
+            if (ImGui.Button("Load world"))
+            {
+                WorldManager.LoadWorld("world.xml");
+                _world = WorldManager.World;
+            }
+
+            // World tree view tab
             if (ImGui.BeginTabBar("Mundos"))
             {
-                ImGui.BeginTabItem("Scene");
+                ImGui.BeginTabItem("World");
                 {
-                    if (_scene != null)
-                        _scene.DrawSceneTree();
+                    if (_world != null){}
+                        // _world.DrawWorldTree();
                     else
-                        ImGui.Text("No scene loaded.");
+                        ImGui.Text("No world loaded.");
                     ImGui.EndTabItem();
                 }
                 ImGui.EndTabBar();
@@ -130,13 +145,40 @@ namespace Mundos
         }
 
         /// <summary>
-        /// Draws the current scene.
-        /// If no scene is loaded, nothing is drawn.
+        /// Draws the current world.
+        /// If no world is loaded, nothing is drawn.
         /// </summary>
-        private void DrawScene()
+        private void DrawWorld()
         {
-            if (_scene != null)
-                _scene.Draw(this);
+            var queryDesc = new QueryDescription().WithAll<Position, Rotation, Scale, Mesh>();
+            foreach(Chunk chunk in WorldManager.World.Query(queryDesc))
+            {
+                Position[]  positions = chunk.GetArray<Position>();
+                Rotation[]  rotations = chunk.GetArray<Rotation>();
+                Scale[]     scales = chunk.GetArray<Scale>();
+                Mesh[]      meshes = chunk.GetArray<Mesh>();
+
+
+                Matrix4 model = Matrix4.Identity;
+                Vector3 _position;
+                Vector3 _rotation;
+                Vector3 _scale;
+
+                for (int i = 0; i < chunk.Size; i++)
+                {
+                    _position = positions[i].position;
+                    _rotation = rotations[i].rotation;
+                    _scale = scales[i].scale;
+
+                    model *= Matrix4.CreateScale(_scale.X, _scale.Y, _scale.Z);
+                    model *= Matrix4.CreateRotationX(_rotation.X);
+                    model *= Matrix4.CreateRotationY(_rotation.Y);
+                    model *= Matrix4.CreateRotationZ(_rotation.Z);
+                    model *= Matrix4.CreateTranslation(_position.X, _position.Y, _position.Z);
+
+                    DrawMesh(meshes[i], model);
+                }
+            }
         }
 
         protected override void OnResize(ResizeEventArgs e)
@@ -196,11 +238,11 @@ namespace Mundos
         /// Draws a mesh on the screen.
         /// </summary>
         /// <param name="mesh">The mesh to be drawn.</param>
-        public void DrawMesh(Mesh mesh)
+        public void DrawMesh(Mesh mesh, Matrix4 modelMatrix)
         {
-            // Get the data from the model
-            mesh.GetDrawData(out float[] vertices, out uint[] indices, out List<Texture> textures);
+            MeshManager.GetMesh(mesh.meshIndex, out float[] vertices, out float[] normals, out float[] texCoords, out uint[] indices);
 
+            // Get the data from the model
             GL.EnableVertexAttribArray(0);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
@@ -210,7 +252,7 @@ namespace Mundos
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
             GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
 
-            _shaderDefault.SetMatrix4("model", mesh.GetMeshTransformMatrix());
+            _shaderDefault.SetMatrix4("model", modelMatrix);
             _shaderDefault.SetMatrix4("view", _camera.GetViewMatrix());
             _shaderDefault.SetMatrix4("projection", _camera.GetProjectionMatrixPerspective());
             _shaderDefault.Use();
@@ -220,15 +262,6 @@ namespace Mundos
             GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
 
             GL.BindVertexArray(0);
-        }
-
-        /// <summary>
-        /// Sets the current scene for rendering.
-        /// </summary>
-        /// <param name="scene">The scene to set. This can be null.</param>
-        public void SetScene(Scene? scene)
-        {
-            _scene = scene;
         }
     }
 }

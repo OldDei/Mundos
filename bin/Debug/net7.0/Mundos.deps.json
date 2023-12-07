@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v7.0": {
       "Mundos/1.0.0": {
         "dependencies": {
+          "Arch": "1.2.7",
           "ImGui.NET.Docking": "1.75.0",
           "OpenTK": "4.8.1",
           "StbImageSharp": "2.27.13"
@@ -16,11 +17,53 @@
           "Mundos.dll": {}
         }
       },
+      "Arch/1.2.7": {
+        "dependencies": {
+          "Arch.LowLevel": "1.0.8",
+          "Collections.Pooled": "2.0.0-preview.27",
+          "CommunityToolkit.HighPerformance": "7.1.2",
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0",
+          "ZeroAllocJobScheduler": "1.0.2"
+        },
+        "runtime": {
+          "lib/net7.0/Arch.dll": {
+            "assemblyVersion": "1.2.7.0",
+            "fileVersion": "1.2.7.0"
+          }
+        }
+      },
+      "Arch.LowLevel/1.0.8": {
+        "dependencies": {
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+        },
+        "runtime": {
+          "lib/net7.0/Arch.LowLevel.dll": {
+            "assemblyVersion": "1.0.8.0",
+            "fileVersion": "1.0.8.0"
+          }
+        }
+      },
+      "Collections.Pooled/2.0.0-preview.27": {
+        "runtime": {
+          "lib/netcoreapp3.0/Collections.Pooled.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.0.0"
+          }
+        }
+      },
+      "CommunityToolkit.HighPerformance/7.1.2": {
+        "runtime": {
+          "lib/net5.0/CommunityToolkit.HighPerformance.dll": {
+            "assemblyVersion": "7.1.0.0",
+            "fileVersion": "7.1.2.1"
+          }
+        }
+      },
       "ImGui.NET.Docking/1.75.0": {
         "dependencies": {
           "System.Buffers": "4.4.0",
           "System.Numerics.Vectors": "4.4.0",
-          "System.Runtime.CompilerServices.Unsafe": "5.0.0"
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         },
         "runtime": {
           "lib/netstandard2.0/ImGui.NET.dll": {
@@ -48,6 +91,14 @@
             "rid": "win-x86",
             "assetType": "native",
             "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "Microsoft.Extensions.ObjectPool/7.0.0": {
+        "runtime": {
+          "lib/net7.0/Microsoft.Extensions.ObjectPool.dll": {
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.0.22.51819"
           }
         }
       },
@@ -114,7 +165,7 @@
       },
       "OpenTK.Mathematics/4.8.1": {
         "dependencies": {
-          "System.Runtime.CompilerServices.Unsafe": "5.0.0"
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         },
         "runtime": {
           "lib/netcoreapp3.1/OpenTK.Mathematics.dll": {
@@ -205,7 +256,18 @@
       },
       "System.Buffers/4.4.0": {},
       "System.Numerics.Vectors/4.4.0": {},
-      "System.Runtime.CompilerServices.Unsafe/5.0.0": {}
+      "System.Runtime.CompilerServices.Unsafe/6.0.0": {},
+      "ZeroAllocJobScheduler/1.0.2": {
+        "dependencies": {
+          "Microsoft.Extensions.ObjectPool": "7.0.0"
+        },
+        "runtime": {
+          "lib/netstandard2.1/JobScheduler.dll": {
+            "assemblyVersion": "1.0.2.0",
+            "fileVersion": "1.0.2.0"
+          }
+        }
+      }
     }
   },
   "libraries": {
@@ -214,12 +276,47 @@
       "serviceable": false,
       "sha512": ""
     },
+    "Arch/1.2.7": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0QdfobYpTMCW3C85qXxHcyQjRQrTxQiRKYqWP3G92DDyB6VPWUKY75eqdde7/HGaqyMsGb7GTFJP5hKewV02Bw==",
+      "path": "arch/1.2.7",
+      "hashPath": "arch.1.2.7.nupkg.sha512"
+    },
+    "Arch.LowLevel/1.0.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-jazwUyHTv/S31yQJ+/Ns1Fofd8QBPX8ZPGCD42FY7gF2ImprHkanA/4MHGqluiF1EChA4+NNykDbW/xu8N6LWQ==",
+      "path": "arch.lowlevel/1.0.8",
+      "hashPath": "arch.lowlevel.1.0.8.nupkg.sha512"
+    },
+    "Collections.Pooled/2.0.0-preview.27": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-VS3uHc1GNamanS1i1hQ3PoZUddIagCswVMWvucAgqWwY2KVwgL2Q7raGu0hTqP/CWuROoq0RiNbIvu4ST1bMzg==",
+      "path": "collections.pooled/2.0.0-preview.27",
+      "hashPath": "collections.pooled.2.0.0-preview.27.nupkg.sha512"
+    },
+    "CommunityToolkit.HighPerformance/7.1.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-rVNzu/HQd60e8sInhHLpboWF9PU/kgenTxKYScjU3EpGMlCnSifomqiJuDhN4MILVioIwpm7eiurQNpngbWpAw==",
+      "path": "communitytoolkit.highperformance/7.1.2",
+      "hashPath": "communitytoolkit.highperformance.7.1.2.nupkg.sha512"
+    },
     "ImGui.NET.Docking/1.75.0": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-OR1NksDIaBcL1cLTx8CztG6Dvpgc7tu82JWYoYkerzWlsq4k160ZOG+YUo5OBaIkEDBGh/6AQ6Y0xF58FXo8PQ==",
       "path": "imgui.net.docking/1.75.0",
       "hashPath": "imgui.net.docking.1.75.0.nupkg.sha512"
+    },
+    "Microsoft.Extensions.ObjectPool/7.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-udvKco0sAVgYGTBnHUb0tY9JQzJ/nPDiv/8PIyz69wl1AibeCDZOLVVI+6156dPfHmJH7ws5oUJRiW4ZmAvuuA==",
+      "path": "microsoft.extensions.objectpool/7.0.0",
+      "hashPath": "microsoft.extensions.objectpool.7.0.0.nupkg.sha512"
     },
     "OpenTK/4.8.1": {
       "type": "package",
@@ -319,12 +416,19 @@
       "path": "system.numerics.vectors/4.4.0",
       "hashPath": "system.numerics.vectors.4.4.0.nupkg.sha512"
     },
-    "System.Runtime.CompilerServices.Unsafe/5.0.0": {
+    "System.Runtime.CompilerServices.Unsafe/6.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-ZD9TMpsmYJLrxbbmdvhwt9YEgG5WntEnZ/d1eH8JBX9LBp+Ju8BSBhUGbZMNVHHomWo2KVImJhTDl2hIgw/6MA==",
-      "path": "system.runtime.compilerservices.unsafe/5.0.0",
-      "hashPath": "system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512"
+      "sha512": "sha512-/iUeP3tq1S0XdNNoMz5C9twLSrM/TH+qElHkXWaPvuNOt+99G75NrV0OS2EqHx5wMN7popYjpc8oTjC1y16DLg==",
+      "path": "system.runtime.compilerservices.unsafe/6.0.0",
+      "hashPath": "system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
+    },
+    "ZeroAllocJobScheduler/1.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-2zQrqXKOUkpy3F0m0Hc69cFjblXAgTmrFSMpqVQt0V0QQknJrfmlaebyosA6N6qfC8klcqfKTWPb9H0xbnGbQw==",
+      "path": "zeroallocjobscheduler/1.0.2",
+      "hashPath": "zeroallocjobscheduler.1.0.2.nupkg.sha512"
     }
   }
 }

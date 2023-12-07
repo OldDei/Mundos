@@ -40,6 +40,10 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "Arch": {
+              "target": "Package",
+              "version": "[1.2.7, )"
+            },
             "ImGui.NET.Docking": {
               "target": "Package",
               "version": "[1.75.0, )"

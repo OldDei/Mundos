@@ -1,10 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "N4MmhkYXgU++g6SvktYAnYFOSdESv/pMq+x5DEzR3fN5TWiKyWxO1sQTnnkI3nLRrVoLxxSNKeZbx7wkdjUs0Q==",
+  "dgSpecHash": "6FuBDL1TM78C3dRohcBxzLayHkl0luXbqe+osb3eM3BPi+bUPAEzeKM0Dlb1tOLUDiNtTyhZFwio6JDPHJw2rw==",
   "success": true,
   "projectFilePath": "C:\\dev\\Mundos\\Mundos.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Michal\\.nuget\\packages\\arch\\1.2.7\\arch.1.2.7.nupkg.sha512",
+    "C:\\Users\\Michal\\.nuget\\packages\\arch.lowlevel\\1.0.8\\arch.lowlevel.1.0.8.nupkg.sha512",
+    "C:\\Users\\Michal\\.nuget\\packages\\collections.pooled\\2.0.0-preview.27\\collections.pooled.2.0.0-preview.27.nupkg.sha512",
+    "C:\\Users\\Michal\\.nuget\\packages\\communitytoolkit.highperformance\\7.1.2\\communitytoolkit.highperformance.7.1.2.nupkg.sha512",
     "C:\\Users\\Michal\\.nuget\\packages\\imgui.net.docking\\1.75.0\\imgui.net.docking.1.75.0.nupkg.sha512",
+    "C:\\Users\\Michal\\.nuget\\packages\\microsoft.extensions.objectpool\\7.0.0\\microsoft.extensions.objectpool.7.0.0.nupkg.sha512",
     "C:\\Users\\Michal\\.nuget\\packages\\opentk\\4.8.1\\opentk.4.8.1.nupkg.sha512",
     "C:\\Users\\Michal\\.nuget\\packages\\opentk.audio.openal\\4.8.1\\opentk.audio.openal.4.8.1.nupkg.sha512",
     "C:\\Users\\Michal\\.nuget\\packages\\opentk.compute\\4.8.1\\opentk.compute.4.8.1.nupkg.sha512",
@@ -19,7 +24,8 @@
     "C:\\Users\\Michal\\.nuget\\packages\\stbimagesharp\\2.27.13\\stbimagesharp.2.27.13.nupkg.sha512",
     "C:\\Users\\Michal\\.nuget\\packages\\system.buffers\\4.4.0\\system.buffers.4.4.0.nupkg.sha512",
     "C:\\Users\\Michal\\.nuget\\packages\\system.numerics.vectors\\4.4.0\\system.numerics.vectors.4.4.0.nupkg.sha512",
-    "C:\\Users\\Michal\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512"
+    "C:\\Users\\Michal\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
+    "C:\\Users\\Michal\\.nuget\\packages\\zeroallocjobscheduler\\1.0.2\\zeroallocjobscheduler.1.0.2.nupkg.sha512"
   ],
   "logs": []
 }
