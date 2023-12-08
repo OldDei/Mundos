@@ -11,17 +11,17 @@ public abstract class MundosScript
     public int entityID { get; set;} = 0; // ID of entity this component is attached to
     private Vector3 EntityPosition {
         get => Mundos.EntityManager.GetEntity(entityID).Get<Position>().position;
-        set => Mundos.EntityManager.GetEntity(entityID).Set(value);
+        set => Mundos.EntityManager.GetEntity(entityID).Set(new Position(entityID, value));
     }
     internal Vector3 position;
     private Vector3 EntityRotation {
         get => Mundos.EntityManager.GetEntity(entityID).Get<Rotation>().rotation;
-        set => Mundos.EntityManager.GetEntity(entityID).Set(value);
+        set => Mundos.EntityManager.GetEntity(entityID).Set(new Rotation(entityID, value));
     }
     internal Vector3 rotation;
     private Vector3 EntityScale {
         get => Mundos.EntityManager.GetEntity(entityID).Get<Scale>().scale;
-        set => Mundos.EntityManager.GetEntity(entityID).Set(value);
+        set => Mundos.EntityManager.GetEntity(entityID).Set(new Scale(entityID, value));
     }
     internal Vector3 scale;
 #pragma warning restore CS0169 // Remove unused private members
@@ -46,7 +46,6 @@ public abstract class MundosScript
     /// This function updates this script.
     /// </summary>
     public void Update() {
-        Console.WriteLine("Position Update 1: " + Mundos.EntityManager.GetEntity(entityID).Get<Position>().position);
         position = EntityPosition;
         rotation = EntityRotation;
         scale = EntityScale;
@@ -54,7 +53,6 @@ public abstract class MundosScript
         EntityPosition = position;
         EntityRotation = rotation;
         EntityScale = scale;
-        Console.WriteLine("Position Update 2: " + Mundos.EntityManager.GetEntity(entityID).Get<Position>().position);
     }
     /// <summary>
     /// Called when the script is updated.

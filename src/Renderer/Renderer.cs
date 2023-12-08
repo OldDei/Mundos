@@ -19,7 +19,7 @@ namespace Mundos
         private int _elementBufferObject;
         private Shader _shaderDefault;
         private World _world;
-        // private ImGuiController _controller;
+        private ImGuiController _controller;
 
         public Renderer(int width, int height, string title) : base(GameWindowSettings.Default, new NativeWindowSettings() { Size = (width, height), Title = title })
         {
@@ -27,12 +27,14 @@ namespace Mundos
 
             // Create a camera object at the origin TODO: only do this if there's no camera in the world already
             Entity camera = EntityManager.Create(EntityManager.ArchetypeType.Camera);
-            camera.Add(new Camera(camera.Id, Size.X / (float)Size.Y, true), new Position(camera.Id, 0, 0, 3f), new Rotation(camera.Id, 0, 0, 0), new Scale(camera.Id, 1, 1, 1));
+            camera.Add(new Camera(camera.Id, Size.X / (float)Size.Y, true), new Position(camera.Id, 0, 0, 3f), new Rotation(camera.Id, 0, -90f, 0), new Scale(camera.Id, 1, 1, 1));
             camera.Add(new Script(camera.Id, new CameraMove()));
+
+            CursorState = CursorState.Grabbed; // Grab the cursor by default
 
             _shaderDefault = new Shader(); // Create a default shader object
 
-            // _controller = new ImGuiController(width, height);
+            _controller = new ImGuiController(width, height);
 
             Debug.WriteLine("Renderer initialized.");
         }
@@ -53,8 +55,8 @@ namespace Mundos
             _elementBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
 
-            Vector3 defaultColor = new Vector3(0.5f, 0.2f, 0.2f);
-            // _shaderDefault.SetVector3("defaultColor", defaultColor);
+            Vector4 defaultColor = new Vector4(0.5f, 0.2f, 0.2f, 1.0f);
+            _shaderDefault.SetVector4("defaultColor", defaultColor);
 
             // We enable depth testing here
             GL.Enable(EnableCap.DepthTest);
@@ -67,10 +69,10 @@ namespace Mundos
             // update delta time
             Time.deltaTime = e.Time;
             Time.deltaTimef = (float)e.Time;
-            // _controller.Update(this, (float)e.Time);
+            _controller.Update(this, (float)e.Time);
 
             // Input update
-            Input.UpdateKeyboardState(this.KeyboardState);
+            Input.UpdateState(this.KeyboardState, this.MouseState);
 
             // World update
             UpdateWorld();
@@ -82,8 +84,8 @@ namespace Mundos
             DrawWorld();
 
             // ImGui update
-            // UpdateImGui();
-            // _controller.Render();
+            UpdateImGui();
+            _controller.Render();
 
             ImGuiController.CheckGLError("End of frame");
 
@@ -208,7 +210,7 @@ namespace Mundos
             if (camera != null)
                 camera.AspectRatio = Size.X / (float)Size.Y;
 
-            // _controller.WindowResized(ClientSize.X, ClientSize.Y);
+            _controller.WindowResized(ClientSize.X, ClientSize.Y);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
@@ -231,15 +233,26 @@ namespace Mundos
         protected override void OnTextInput(TextInputEventArgs e)
         {
             base.OnTextInput(e);
+            if ((char)e.Unicode == 'g') // If the user presses the 'g' key, toggle the cursor grab
+            {
+                if (CursorState == CursorState.Grabbed) // If the cursor is grabbed, release it
+                {
+                    CursorState = CursorState.Normal;
+                }
+                else if (CursorState == CursorState.Normal) // If the cursor is not grabbed, grab it
+                {
+                    CursorState = CursorState.Grabbed;
+                }
+            }
 
-            // _controller.PressChar((char)e.Unicode);
+            _controller.PressChar((char)e.Unicode);
         }
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
             base.OnMouseWheel(e);
 
-            // _controller.MouseScroll(e.Offset);
+            _controller.MouseScroll(e.Offset);
         }
 
         protected override void OnUnload()

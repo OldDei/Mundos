@@ -30,7 +30,7 @@ namespace Mundos
         private float _yaw = -MathHelper.PiOver2; // Without this, you would be started rotated 90 degrees right.
 
         // The field of view of the camera (radians)
-        private float _fov = MathHelper.PiOver2;
+        private float _fov = MathHelper.DegreesToRadians(45f);
 
         public Camera(int entityID, float aspectRatio, bool isPrimaryCamera = false)
         {
@@ -58,9 +58,8 @@ namespace Mundos
                 // We clamp the pitch value between -89 and 89 to prevent the camera from going upside down, and a bunch
                 // of weird "bugs" when you are using euler angles for rotation.
                 // If you want to read more about this you can try researching a topic called gimbal lock
-                var angle = MathHelper.Clamp(value, -89f, 89f);
+                var angle = MathHelper.Clamp(value, (-89f), (89f));
                 _pitch = MathHelper.DegreesToRadians(angle);
-                UpdateVectors();
             }
         }
 
@@ -71,7 +70,6 @@ namespace Mundos
             set
             {
                 _yaw = MathHelper.DegreesToRadians(value);
-                UpdateVectors();
             }
         }
 
@@ -93,6 +91,7 @@ namespace Mundos
         public Matrix4 GetViewMatrix()
         {
             Vector3 position = EntityManager.GetEntity(entityID).Get<Position>().position;
+            UpdateVectors();
             return Matrix4.LookAt(position, position + _front, _up);
         }
 
@@ -110,10 +109,14 @@ namespace Mundos
         // This function is going to update the direction vertices using some of the math learned in the web tutorials.
         private void UpdateVectors()
         {
+            Vector3 rotation = EntityManager.GetEntity(entityID).Get<Rotation>().rotation;
+            Pitch = rotation.X;
+            Yaw = rotation.Y;
+
             // First, the front matrix is calculated using some basic trigonometry.
-            _front.X = MathF.Cos(_pitch) * MathF.Cos(_yaw);
-            _front.Y = MathF.Sin(_pitch);
-            _front.Z = MathF.Cos(_pitch) * MathF.Sin(_yaw);
+            _front.X = MathF.Cos(-_pitch) * MathF.Cos(_yaw);
+            _front.Y = MathF.Sin(-_pitch);
+            _front.Z = MathF.Cos(-_pitch) * MathF.Sin(_yaw);
 
             // We need to make sure the vectors are all normalized, as otherwise we would get some funky results.
             _front = Vector3.Normalize(_front);
@@ -122,7 +125,7 @@ namespace Mundos
             // Note that we are calculating the right from the global up; this behaviour might
             // not be what you need for all cameras so keep this in mind if you do not want a FPS camera.
             _right = Vector3.Normalize(Vector3.Cross(_front, Vector3.UnitY));
-            _up = Vector3.Normalize(Vector3.Cross(_right, _front));
+            _up =    Vector3.Normalize(Vector3.Cross(_right, _front));
         }
     }
 }

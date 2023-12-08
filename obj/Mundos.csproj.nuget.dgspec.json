@@ -1,25 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Dev\\test\\Mundos\\Mundos.csproj": {}
+    "C:\\dev\\Mundos\\Mundos.csproj": {}
   },
   "projects": {
-    "C:\\Dev\\test\\Mundos\\Mundos.csproj": {
+    "C:\\dev\\Mundos\\Mundos.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Dev\\test\\Mundos\\Mundos.csproj",
+        "projectUniqueName": "C:\\dev\\Mundos\\Mundos.csproj",
         "projectName": "Mundos",
-        "projectPath": "C:\\Dev\\test\\Mundos\\Mundos.csproj",
-        "packagesPath": "C:\\Users\\michal.brecka\\.nuget\\packages\\",
-        "outputPath": "C:\\Dev\\test\\Mundos\\obj\\",
+        "projectPath": "C:\\dev\\Mundos\\Mundos.csproj",
+        "packagesPath": "C:\\Users\\Michal\\.nuget\\packages\\",
+        "outputPath": "C:\\dev\\Mundos\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\michal.brecka\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Michal\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {

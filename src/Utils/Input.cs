@@ -1,3 +1,4 @@
+using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Mundos
@@ -5,6 +6,7 @@ namespace Mundos
     public static class Input
     {
         private static KeyboardState? input; // keybaord state from renderer
+        private static MouseState? mouse; // mouse state from renderer
 
         public static bool IsKeyDown(Keys key)
         {
@@ -24,9 +26,17 @@ namespace Mundos
             return false;
         }
 
-        internal static void UpdateKeyboardState(KeyboardState input)
+        internal static void UpdateState(KeyboardState input, MouseState mouse)
         {
             Input.input = input;
+            Input.mouse = mouse;
+        }
+
+        internal static Vector2 MouseMoveDelta()
+        {
+            if (mouse == null)
+                return Vector2.Zero;
+            return mouse.Delta;
         }
     }
 }

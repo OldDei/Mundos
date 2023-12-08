@@ -15,11 +15,11 @@ namespace Mundos {
             vertexTexCoords = new List<float[]>();
             indices = new List<uint[]>();
 
-            // Debug square
+            // Debug square vertical
             vertexPositions.Add(new float[] {
                 -0.5f, -0.5f, 0.0f,
-                0.5f, -0.5f, 0.0f,
-                0.5f,  0.5f, 0.0f,
+                 0.5f, -0.5f, 0.0f,
+                 0.5f,  0.5f, 0.0f,
                 -0.5f,  0.5f, 0.0f
             });
             vertexNormals.Add(new float[] {
@@ -27,6 +27,29 @@ namespace Mundos {
                 0.0f, 0.0f, 1.0f,
                 0.0f,  0.0f, 1.0f,
                 0.0f,  0.0f, 1.0f
+            });
+            vertexTexCoords.Add(new float[] {
+                0.0f, 0.0f,
+                1.0f, 0.0f,
+                1.0f,  1.0f,
+                0.0f,  1.0f
+            });
+            indices.Add(new uint[] {
+                0, 1, 2,
+                2, 3, 0
+            });
+            // Debug square horizontal
+            vertexPositions.Add(new float[] {
+                -0.5f,  0.0f, -0.5f,
+                 0.5f,  0.0f, -0.5f,
+                 0.5f,  0.0f,  0.5f,
+                -0.5f,  0.0f,  0.5f
+            });
+            vertexNormals.Add(new float[] {
+                0.0f, 1.0f, 0.0f,
+                0.0f,  1.0f, 0.0f,
+                0.0f,  1.0f, 0.0f,
+                0.0f,  1.0f, 0.0f
             });
             vertexTexCoords.Add(new float[] {
                 0.0f, 0.0f,

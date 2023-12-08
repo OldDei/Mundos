@@ -154,5 +154,11 @@ namespace Mundos
             GL.UseProgram(Handle);
             GL.Uniform3(_uniformLocations[name], data);
         }
+
+        internal void SetVector4(string v, Vector4 vector4)
+        {
+            GL.UseProgram(Handle);
+            GL.Uniform4(_uniformLocations[v], vector4);
+        }
     }
 }

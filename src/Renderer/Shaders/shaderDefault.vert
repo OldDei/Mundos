@@ -11,6 +11,6 @@ uniform vec4 defaultColor;
 
 void main()
 {
-    vertexColor = vec4(1.0, 1.0, 0.0, 1.0);
+    vertexColor = defaultColor;
     gl_Position = vec4(aPos, 1.0) * model * view * projection;
 }

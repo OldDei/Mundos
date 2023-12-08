@@ -29,10 +29,10 @@ namespace Mundos
             _world = World.Create();
 
             Entity entity1 = EntityManager.Create(EntityManager.ArchetypeType.Model);
-            entity1.Set(new Position(entity1.Id, -0.5f, 0, 0), new Rotation(entity1.Id, 0, 0, 0), new Scale(entity1.Id, 1, 1, 1), new Mesh(entity1.Id, 0));
+            entity1.Set(new Position(entity1.Id, -0.25f, 0, 0), new Rotation(entity1.Id, 0, 0, 0), new Scale(entity1.Id, 5, 1, 1), new Mesh(entity1.Id, 0));
 
-            Entity entity2 = EntityManager.Create(EntityManager.ArchetypeType.Model);
-            entity2.Set(new Position(entity1.Id,  0.5f, 0, 0), new Rotation(entity1.Id, 0, 0, 0), new Scale(entity1.Id, 1, 1, 1), new Mesh(entity1.Id, 0));
+            // Entity entity2 = EntityManager.Create(EntityManager.ArchetypeType.Model);
+            // entity2.Set(new Position(entity1.Id,  0.5f, 0, 0), new Rotation(entity1.Id, 0, 0, 0), new Scale(entity1.Id, 1, 1, 1), new Mesh(entity1.Id, 1));
 
             return true;
         }
