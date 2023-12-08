@@ -2,7 +2,7 @@ using OpenTK.Mathematics;
 
 namespace Mundos {
 
-    public static class MeshManager {
+    internal static class MeshManager {
 
         static List<float[]> vertexPositions;
         static List<float[]> vertexNormals;

@@ -1,6 +1,7 @@
 using OpenTK.Mathematics;
 using System;
 
+// Camera class from https://learnopengl.com/Getting-started/Camera
 namespace Mundos
 {
     // This is the camera class as it could be set up after the tutorials on the website.
@@ -10,8 +11,10 @@ namespace Mundos
 
     // TL;DR: This is just one of many ways in which we could have set up the camera.
     // Check out the web version if you don't know why we are doing a specific thing or want to know more about the code.
-    public class Camera
+    internal class Camera
     {
+        public int entityID; // ID of entity this component is attached to
+
         // Those vectors are directions pointing outwards from the camera to define how it rotated.
         private Vector3 _front = -Vector3.UnitZ;
 
@@ -28,10 +31,13 @@ namespace Mundos
         // The field of view of the camera (radians)
         private float _fov = MathHelper.PiOver2;
 
-        public Camera(Vector3 position, float aspectRatio)
+        public Camera(int entityID, Vector3 position, float aspectRatio, bool isPrimaryCamera = false)
         {
-            Position = position;
-            AspectRatio = aspectRatio;
+            this.Position = position;
+            this.AspectRatio = aspectRatio;
+            this.entityID = entityID;
+            if (isPrimaryCamera)
+                WorldManager.SetActiveCamera(this);
         }
 
         // The position of the camera

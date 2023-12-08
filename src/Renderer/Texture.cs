@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 namespace Mundos
 {
     // A helper class, much like Shader, meant to simplify loading textures.
-    public class Texture
+    internal class Texture
     {
         public enum TextureType
         {

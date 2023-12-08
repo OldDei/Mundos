@@ -1,4 +1,6 @@
 using Arch.Core;
+using Arch.Core.Extensions;
+using CommunityToolkit.HighPerformance;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -10,24 +12,27 @@ using System.Runtime.CompilerServices;
 
 namespace Mundos
 {
-    public class Renderer : GameWindow
+    internal class Renderer : GameWindow
     {
         private double _deltaTime;
         private int _vertexArrayObject;
         private int _vertexBufferObject;
         private int _elementBufferObject;
         private Shader _shaderDefault;
-        private Camera _camera;
         private World _world;
         ImGuiController _controller;
 
         public Renderer(int width, int height, string title) : base(GameWindowSettings.Default, new NativeWindowSettings() { Size = (width, height), Title = title })
         {
-            _deltaTime = 0.0; // Time between current frame and last frame
-            _camera = new Camera(new Vector3(0.0f, 0.0f, 3.0f), Size.X / (float)Size.Y); // Create a camera object at the origin
-            _shaderDefault = new Shader(); // Create a default shader object
-
             _world = WorldManager.World;
+
+            // Create a camera object at the origin TODO: only do this if there's no camera in the world already
+            Entity camera = EntityManager.Create(EntityManager.ArchetypeType.Camera);
+            camera.Set(new Camera(camera.Id, new Vector3(0.0f, 0.0f, 3.0f), Size.X / (float)Size.Y, true), new Position(camera.Id, 0, 0, 0), new Rotation(camera.Id, 0, 0, 0), new Scale(camera.Id, 1, 1, 1));
+            camera.Set(new Script(camera.Id, new CameraMove()));
+
+            _shaderDefault = new Shader(); // Create a default shader object
+            _deltaTime = 0.0; // Time between current frame and last frame
 
             _controller = new ImGuiController(width, height);
 
@@ -65,7 +70,11 @@ namespace Mundos
             _deltaTime = e.Time;
             _controller.Update(this, (float)e.Time);
 
-            // Physics update
+            // Input update
+            Input.UpdateKeyboardState(this.KeyboardState);
+
+            // World update
+            UpdateWorld();
 
             // Clear the screen
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -74,7 +83,7 @@ namespace Mundos
             DrawWorld();
 
             // ImGui update
-            UpdateImGui();
+            // UpdateImGui();
             _controller.Render();
 
             ImGuiController.CheckGLError("End of frame");
@@ -164,7 +173,7 @@ namespace Mundos
                 Vector3 _rotation;
                 Vector3 _scale;
 
-                for (int i = 0; i < chunk.Size; i++)
+                foreach (int i in chunk)
                 {
                     _position = positions[i].position;
                     _rotation = rotations[i].rotation;
@@ -176,8 +185,18 @@ namespace Mundos
                     model *= Matrix4.CreateRotationZ(_rotation.Z);
                     model *= Matrix4.CreateTranslation(_position.X, _position.Y, _position.Z);
 
-                    DrawMesh(meshes[i], model);
+                    DrawMesh(meshes[i], model); // TODO: Instead submit the mesh to the renderer and let it draw it
                 }
+            }
+        }
+
+        private void UpdateWorld()
+        {
+            var queryDesc = new QueryDescription().WithAll<Script>();
+            foreach(Chunk chunk in WorldManager.World.Query(queryDesc))
+            {
+                Script[] scripts = chunk.GetArray<Script>();
+                Parallel.For(0, chunk.Size, i => scripts[i].MundosScriptRef.OnUpdate());
             }
         }
 
@@ -186,7 +205,9 @@ namespace Mundos
             base.OnResize(e);
 
             GL.Viewport(0, 0, e.Width, e.Height);
-            _camera.AspectRatio = Size.X / (float)Size.Y;
+            WorldManager.GetActiveCamera(out Camera? camera);
+            if (camera != null)
+                camera.AspectRatio = Size.X / (float)Size.Y;
 
             _controller.WindowResized(ClientSize.X, ClientSize.Y);
         }
@@ -252,9 +273,13 @@ namespace Mundos
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
             GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
 
+            WorldManager.GetActiveCamera(out Camera? camera); // Get the active camera from the world
+            if (camera == null) // If there's no camera, we can't draw anything
+                return;
+
             _shaderDefault.SetMatrix4("model", modelMatrix);
-            _shaderDefault.SetMatrix4("view", _camera.GetViewMatrix());
-            _shaderDefault.SetMatrix4("projection", _camera.GetProjectionMatrixPerspective());
+            _shaderDefault.SetMatrix4("view", camera.GetViewMatrix());
+            _shaderDefault.SetMatrix4("projection", camera.GetProjectionMatrixPerspective());
             _shaderDefault.Use();
 
             GL.BindVertexArray(_vertexArrayObject);

@@ -5,9 +5,10 @@ using OpenTK.Mathematics;
 
 namespace Mundos
 {
-    public static class WorldManager
+    internal static class WorldManager
     {
         private static World _world;
+        private static Camera? _primaryCamera;
 
         static WorldManager()
         {
@@ -16,7 +17,6 @@ namespace Mundos
         }
 
 
-        internal static World World => _world;
 
         /// <summary>
         /// Loads a world with the specified name.
@@ -28,8 +28,12 @@ namespace Mundos
             // TODO: Load world from file
             _world = World.Create();
 
-            _world.Create(componentArchetypes[ArchetypeType.Model]).Set(new Position(-0.25f, 0, 0), new Rotation(0, 0, 0), new Scale(1, 1, 1), new Mesh(0));
-            _world.Create(componentArchetypes[ArchetypeType.Model]).Set(new Position( 0.25f, 0, 0), new Rotation(0, 0, 0), new Scale(1, 1, 1), new Mesh(0));
+            Entity entity1 = EntityManager.Create(EntityManager.ArchetypeType.Model);
+            entity1.Set(new Position(entity1.Id, -0.5f, 0, 0), new Rotation(entity1.Id, 0, 0, 0), new Scale(entity1.Id, 1, 1, 1), new Mesh(entity1.Id, 0));
+
+            Entity entity2 = EntityManager.Create(EntityManager.ArchetypeType.Model);
+            entity2.Set(new Position(entity1.Id,  0.5f, 0, 0), new Rotation(entity1.Id, 0, 0, 0), new Scale(entity1.Id, 1, 1, 1), new Mesh(entity1.Id, 0));
+
             return true;
         }
 
@@ -43,16 +47,8 @@ namespace Mundos
             return false;
         }
 
-        public static Dictionary<ArchetypeType, ComponentType[]> componentArchetypes = new Dictionary<ArchetypeType, ComponentType[]>()
-        {
-            { ArchetypeType.EmptyNode,  new ComponentType[]{ typeof(Position), typeof(Rotation), typeof(Scale)               } },
-            { ArchetypeType.Model,      new ComponentType[]{ typeof(Position), typeof(Rotation), typeof(Scale), typeof(Mesh) } }
-        };
-
-        public enum ArchetypeType
-        {
-            EmptyNode,
-            Model
-        }
+        internal static void SetActiveCamera(Camera camera) => _primaryCamera = camera;
+        internal static void GetActiveCamera(out Camera? camera) => camera = _primaryCamera;
+        internal static World World => _world;
     }
 }

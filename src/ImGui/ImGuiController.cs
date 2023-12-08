@@ -12,7 +12,7 @@ using ErrorCode = OpenTK.Graphics.OpenGL4.ErrorCode;
 
 namespace Mundos
 {
-    public class ImGuiController : IDisposable
+    internal class ImGuiController : IDisposable
     {
         private bool _frameBegun;
 
@@ -29,7 +29,7 @@ namespace Mundos
         private int _shader;
         private int _shaderFontTextureLocation;
         private int _shaderProjectionMatrixLocation;
-        
+
         private int _windowWidth;
         private int _windowHeight;
 
@@ -261,7 +261,7 @@ void main()
             var screenPoint = new Vector2i((int)MouseState.X, (int)MouseState.Y);
             var point = screenPoint;//wnd.PointToClient(screenPoint);
             io.MousePos = new System.Numerics.Vector2(point.X, point.Y);
-            
+
             foreach (Keys key in Enum.GetValues(typeof(Keys)))
             {
                 if (key == Keys.Unknown)
@@ -291,7 +291,7 @@ void main()
         internal void MouseScroll(Vector2 offset)
         {
             ImGuiIOPtr io = ImGui.GetIO();
-            
+
             io.MouseWheel = offset.Y;
             io.MouseWheelH = offset.X;
         }
@@ -370,7 +370,7 @@ void main()
             {
                 GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
             }
-            
+
             // Bind the element buffer (thru the VAO) so that we can resize it.
             GL.BindVertexArray(_vertexArray);
             // Bind the vertex buffer so that we can resize it.
@@ -383,7 +383,7 @@ void main()
                 if (vertexSize > _vertexBufferSize)
                 {
                     int newSize = (int)Math.Max(_vertexBufferSize * 1.5f, vertexSize);
-                    
+
                     GL.BufferData(BufferTarget.ArrayBuffer, newSize, IntPtr.Zero, BufferUsageHint.DynamicDraw);
                     _vertexBufferSize = newSize;
 

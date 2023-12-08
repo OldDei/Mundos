@@ -8,7 +8,7 @@ using OpenTK.Mathematics;
 namespace Mundos
 {
     // A simple class meant to help create shaders.
-    public class Shader
+    internal class Shader
     {
         private const string defaultShaderPathVert = "src/Renderer/Shaders/shaderDefault.vert";
         private const string defaultShaderPathFrag = "src/Renderer/Shaders/shaderDefault.frag";
