@@ -14,13 +14,12 @@ namespace Mundos
 {
     internal class Renderer : GameWindow
     {
-        private double _deltaTime;
         private int _vertexArrayObject;
         private int _vertexBufferObject;
         private int _elementBufferObject;
         private Shader _shaderDefault;
         private World _world;
-        ImGuiController _controller;
+        // private ImGuiController _controller;
 
         public Renderer(int width, int height, string title) : base(GameWindowSettings.Default, new NativeWindowSettings() { Size = (width, height), Title = title })
         {
@@ -28,13 +27,12 @@ namespace Mundos
 
             // Create a camera object at the origin TODO: only do this if there's no camera in the world already
             Entity camera = EntityManager.Create(EntityManager.ArchetypeType.Camera);
-            camera.Set(new Camera(camera.Id, new Vector3(0.0f, 0.0f, 3.0f), Size.X / (float)Size.Y, true), new Position(camera.Id, 0, 0, 0), new Rotation(camera.Id, 0, 0, 0), new Scale(camera.Id, 1, 1, 1));
-            camera.Set(new Script(camera.Id, new CameraMove()));
+            camera.Add(new Camera(camera.Id, Size.X / (float)Size.Y, true), new Position(camera.Id, 0, 0, 3f), new Rotation(camera.Id, 0, 0, 0), new Scale(camera.Id, 1, 1, 1));
+            camera.Add(new Script(camera.Id, new CameraMove()));
 
             _shaderDefault = new Shader(); // Create a default shader object
-            _deltaTime = 0.0; // Time between current frame and last frame
 
-            _controller = new ImGuiController(width, height);
+            // _controller = new ImGuiController(width, height);
 
             Debug.WriteLine("Renderer initialized.");
         }
@@ -67,8 +65,9 @@ namespace Mundos
             base.OnRenderFrame(e);
 
             // update delta time
-            _deltaTime = e.Time;
-            _controller.Update(this, (float)e.Time);
+            Time.deltaTime = e.Time;
+            Time.deltaTimef = (float)e.Time;
+            // _controller.Update(this, (float)e.Time);
 
             // Input update
             Input.UpdateKeyboardState(this.KeyboardState);
@@ -84,7 +83,7 @@ namespace Mundos
 
             // ImGui update
             // UpdateImGui();
-            _controller.Render();
+            // _controller.Render();
 
             ImGuiController.CheckGLError("End of frame");
 
@@ -133,7 +132,7 @@ namespace Mundos
             ImGui.End();
 
             // Store current frame time
-            _frameTimes[_frameIndex] = _deltaTime;
+            _frameTimes[_frameIndex] = Time.deltaTime;
             _frameIndex = (_frameIndex + 1) % MaxFrameCount;
         }
 
@@ -192,11 +191,11 @@ namespace Mundos
 
         private void UpdateWorld()
         {
-            var queryDesc = new QueryDescription().WithAll<Script>();
+            var queryDesc = new QueryDescription().WithAny<Script>();
             foreach(Chunk chunk in WorldManager.World.Query(queryDesc))
             {
                 Script[] scripts = chunk.GetArray<Script>();
-                Parallel.For(0, chunk.Size, i => scripts[i].MundosScriptRef.OnUpdate());
+                Parallel.For(0, chunk.Size, i => scripts[i].MundosScriptRef.Update());
             }
         }
 
@@ -209,7 +208,7 @@ namespace Mundos
             if (camera != null)
                 camera.AspectRatio = Size.X / (float)Size.Y;
 
-            _controller.WindowResized(ClientSize.X, ClientSize.Y);
+            // _controller.WindowResized(ClientSize.X, ClientSize.Y);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
@@ -233,14 +232,14 @@ namespace Mundos
         {
             base.OnTextInput(e);
 
-            _controller.PressChar((char)e.Unicode);
+            // _controller.PressChar((char)e.Unicode);
         }
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
             base.OnMouseWheel(e);
 
-            _controller.MouseScroll(e.Offset);
+            // _controller.MouseScroll(e.Offset);
         }
 
         protected override void OnUnload()

@@ -1,3 +1,4 @@
+using Arch.Core.Extensions;
 using OpenTK.Mathematics;
 using System;
 
@@ -31,17 +32,13 @@ namespace Mundos
         // The field of view of the camera (radians)
         private float _fov = MathHelper.PiOver2;
 
-        public Camera(int entityID, Vector3 position, float aspectRatio, bool isPrimaryCamera = false)
+        public Camera(int entityID, float aspectRatio, bool isPrimaryCamera = false)
         {
-            this.Position = position;
             this.AspectRatio = aspectRatio;
             this.entityID = entityID;
             if (isPrimaryCamera)
                 WorldManager.SetActiveCamera(this);
         }
-
-        // The position of the camera
-        public Vector3 Position { get; set; }
 
         // This is simply the aspect ratio of the viewport, used for the projection matrix.
         public float AspectRatio { private get; set; }
@@ -95,7 +92,8 @@ namespace Mundos
         // Get the view matrix using the amazing LookAt function described more in depth on the web tutorials
         public Matrix4 GetViewMatrix()
         {
-            return Matrix4.LookAt(Position, Position + _front, _up);
+            Vector3 position = EntityManager.GetEntity(entityID).Get<Position>().position;
+            return Matrix4.LookAt(position, position + _front, _up);
         }
 
         // Get the projection matrix using the same method we have used up until this point

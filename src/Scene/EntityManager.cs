@@ -1,5 +1,6 @@
 using Arch.Core;
 using Arch.Core.Utils;
+using CommunityToolkit.HighPerformance;
 
 namespace Mundos {
     internal static class EntityManager {

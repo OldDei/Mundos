@@ -2,7 +2,7 @@ namespace Mundos
 {
     public static class Time
     {
-        public static float DeltaTime { get; internal set; }
-        public static float TimeSinceStartup { get; internal set; }
+        public static double deltaTime { get; internal set; } = 0;
+        public static float  deltaTimef { get; internal set; } = 0;
     }
 }
