@@ -9,9 +9,16 @@ namespace Mundos {
         public override void OnUpdate() {
 
             float moveSpeed = 1f;
-            float mouseSensitivity = 30f;
+            float mouseSensitivity = 45f;
 
             Camera cam = EntityManager.GetEntity(entityID).Get<Camera>();
+
+            if (Input.IsKeyDown(Keys.LeftShift)) {
+                moveSpeed = 4f;
+            }
+            else {
+                moveSpeed = 1f;
+            }
 
             // Update camera position based on input
             if (Input.IsKeyDown(Keys.W)) {
@@ -27,16 +34,10 @@ namespace Mundos {
                 position += moveSpeed * Time.deltaTimef * -cam.Right;
             }
             if (Input.IsKeyDown(Keys.Space)) {
-                position += moveSpeed * Time.deltaTimef * cam.Up;
+                position += moveSpeed * Time.deltaTimef * Vector3.UnitY;
             }
             if (Input.IsKeyDown(Keys.LeftControl)) {
-                position += moveSpeed * Time.deltaTimef * -cam.Up;
-            }
-            if (Input.IsKeyDown(Keys.LeftShift)) {
-                moveSpeed = 2f;
-            }
-            else {
-                moveSpeed = 1f;
+                position += moveSpeed * Time.deltaTimef * -Vector3.UnitY;
             }
 
             Vector2 mouseMoveDelta = Input.MouseMoveDelta();

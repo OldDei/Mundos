@@ -31,6 +31,7 @@ namespace Mundos
 
         // The field of view of the camera (radians)
         private float _fov = MathHelper.DegreesToRadians(45f);
+        public bool Locked = false;
 
         public Camera(int entityID, float aspectRatio, bool isPrimaryCamera = false)
         {
@@ -59,7 +60,7 @@ namespace Mundos
                 // of weird "bugs" when you are using euler angles for rotation.
                 // If you want to read more about this you can try researching a topic called gimbal lock
                 var angle = MathHelper.Clamp(value, (-89f), (89f));
-                _pitch = MathHelper.DegreesToRadians(angle);
+                if (!Locked) _pitch = MathHelper.DegreesToRadians(angle);
             }
         }
 
@@ -69,7 +70,7 @@ namespace Mundos
             get => MathHelper.RadiansToDegrees(_yaw);
             set
             {
-                _yaw = MathHelper.DegreesToRadians(value);
+                if (!Locked) _yaw = MathHelper.DegreesToRadians(value);
             }
         }
 

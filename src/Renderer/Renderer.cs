@@ -17,7 +17,6 @@ namespace Mundos
         private int _vertexArrayObject;
         private int _vertexBufferObject;
         private int _elementBufferObject;
-        private Shader _shaderDefault;
         private World _world;
         private ImGuiController _controller;
 
@@ -26,13 +25,11 @@ namespace Mundos
             _world = WorldManager.World;
 
             // Create a camera object at the origin TODO: only do this if there's no camera in the world already
-            Entity camera = EntityManager.Create(EntityManager.ArchetypeType.Camera);
+            Entity camera = EntityManager.Create(EntityManager.ArchetypeType.Camera, "Editor Camera");
             camera.Add(new Camera(camera.Id, Size.X / (float)Size.Y, true), new Position(camera.Id, 0, 0, 3f), new Rotation(camera.Id, 0, -90f, 0), new Scale(camera.Id, 1, 1, 1));
             camera.Add(new Script(camera.Id, new CameraMove()));
 
             CursorState = CursorState.Grabbed; // Grab the cursor by default
-
-            _shaderDefault = new Shader(); // Create a default shader object
 
             _controller = new ImGuiController(width, height);
 
@@ -54,9 +51,6 @@ namespace Mundos
 
             _elementBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
-
-            Vector4 defaultColor = new Vector4(0.5f, 0.2f, 0.2f, 1.0f);
-            _shaderDefault.SetVector4("defaultColor", defaultColor);
 
             // We enable depth testing here
             GL.Enable(EnableCap.DepthTest);
@@ -122,8 +116,8 @@ namespace Mundos
             {
                 ImGui.BeginTabItem("World");
                 {
-                    if (_world != null){}
-                        // _world.DrawWorldTree();
+                    if (_world != null)
+                        EntityManager.DrawEntityTree();
                     else
                         ImGui.Text("No world loaded.");
                     ImGui.EndTabItem();
@@ -238,10 +232,16 @@ namespace Mundos
                 if (CursorState == CursorState.Grabbed) // If the cursor is grabbed, release it
                 {
                     CursorState = CursorState.Normal;
+                    WorldManager.GetActiveCamera(out Camera? camera);
+                    if (camera != null)
+                        camera.Locked = true;
                 }
                 else if (CursorState == CursorState.Normal) // If the cursor is not grabbed, grab it
                 {
                     CursorState = CursorState.Grabbed;
+                    WorldManager.GetActiveCamera(out Camera? camera);
+                    if (camera != null)
+                        camera.Locked = false;
                 }
             }
 
@@ -289,10 +289,10 @@ namespace Mundos
             if (camera == null) // If there's no camera, we can't draw anything
                 return;
 
-            _shaderDefault.SetMatrix4("model", modelMatrix);
-            _shaderDefault.SetMatrix4("view", camera.GetViewMatrix());
-            _shaderDefault.SetMatrix4("projection", camera.GetProjectionMatrixPerspective());
-            _shaderDefault.Use();
+            ShaderManager.GetShader(mesh.shaderIndex).SetMatrix4("model", modelMatrix);
+            ShaderManager.GetShader(mesh.shaderIndex).SetMatrix4("view", camera.GetViewMatrix());
+            ShaderManager.GetShader(mesh.shaderIndex).SetMatrix4("projection", camera.GetProjectionMatrixPerspective());
+            ShaderManager.GetShader(mesh.shaderIndex).Use();
 
             GL.BindVertexArray(_vertexArrayObject);
 
