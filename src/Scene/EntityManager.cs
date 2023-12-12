@@ -18,31 +18,8 @@ namespace Mundos {
             _entityChildren.Add(_root, new List<Entity>()); // Add the root node to the children list
         }
 
-        internal static void DrawEntityTree()
-        {
-            ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.DefaultOpen;
-            if (ImGui.TreeNodeEx(_entityNames[_root], baseFlags))
-            {
-                foreach (Entity entity in _entityChildren[_root]) // Iterate through all children of the root node
-                {
-                    if (ImGui.TreeNodeEx(_entityNames[entity], baseFlags))
-                    {
-                        // foreach (Entity child in _entityChildren[entity]) // Iterate through all children of this entity
-                        // {
-                        //     if (ImGui.TreeNodeEx(_entityNames[child], baseFlags))
-                        //     {
-                        //         ImGui.TreePop();
-                        //     }
-                        // }
-                        ImGui.TreePop();
-                    }
-                }
-                ImGui.TreePop();
-            }
-        }
-
         internal static Entity Create(ArchetypeType archetype, string name, Entity? parent = null) {
-            Entity entity = WorldManager.World.Create(componentArchetypes[archetype]);
+            Entity entity = WorldManager.World.Create(componentArchetypes[archetype]); // Create a new entity with the specified archetype
             Entity parentEntity = parent ?? _root; // If no parent is specified, use the root node
             _entities.Add(entity.Id, entity); // Add this entity to the entities list
             _entityNames.Add(entity, name); // Add this entity to the names list
@@ -72,6 +49,12 @@ namespace Mundos {
             _entities.Remove(entity.Id); // Remove this entity from the entities list
             WorldManager.World.Destroy(entity); // Destroy this entity
         }
+
+        public static Dictionary<int, Entity> Entities { get => _entities;}
+        public static Dictionary<Entity, string> EntityNames { get => _entityNames;}
+        public static Dictionary<Entity, Entity> EntityParents { get => _entityParents;}
+        public static Dictionary<Entity, List<Entity>> EntityChildren { get => _entityChildren;}
+        public static Entity Root { get => _root;}
 
         public static Dictionary<ArchetypeType, ComponentType[]> componentArchetypes = new Dictionary<ArchetypeType, ComponentType[]>()
         {

@@ -1,14 +1,12 @@
 using Arch.Core;
 using Arch.Core.Extensions;
 using CommunityToolkit.HighPerformance;
-using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 
 namespace Mundos
 {
@@ -17,19 +15,14 @@ namespace Mundos
         private int _vertexArrayObject;
         private int _vertexBufferObject;
         private int _elementBufferObject;
-        private World _world;
         private ImGuiController _controller;
 
         public Renderer(int width, int height, string title) : base(GameWindowSettings.Default, new NativeWindowSettings() { Size = (width, height), Title = title })
         {
-            _world = WorldManager.World;
-
-            // Create a camera object at the origin TODO: only do this if there's no camera in the world already
+            // Create a camera object at the origin TODO: Make a separate camera for the editor not in ECS
             Entity camera = EntityManager.Create(EntityManager.ArchetypeType.Camera, "Editor Camera");
             camera.Add(new Camera(camera.Id, Size.X / (float)Size.Y, true), new Position(camera.Id, 0, 0, 3f), new Rotation(camera.Id, 0, -90f, 0), new Scale(camera.Id, 1, 1, 1));
-            camera.Add(new Script(camera.Id, new CameraMove()));
-
-            CursorState = CursorState.Grabbed; // Grab the cursor by default
+            camera.Add(new Script(camera.Id, new EditorCameraMove()));
 
             _controller = new ImGuiController(width, height);
 
@@ -60,13 +53,24 @@ namespace Mundos
         {
             base.OnRenderFrame(e);
 
-            // update delta time
+            // update delta times
             Time.deltaTime = e.Time;
             Time.deltaTimef = (float)e.Time;
             _controller.Update(this, (float)e.Time);
 
             // Input update
             Input.UpdateState(this.KeyboardState, this.MouseState);
+
+            // Camera lock
+            WorldManager.GetActiveCamera(out Camera? camera);
+            if (camera != null && camera.Locked)
+            {
+                CursorState = CursorState.Grabbed;
+            }
+            else
+            {
+                CursorState = CursorState.Normal;
+            }
 
             // World update
             UpdateWorld();
@@ -93,59 +97,8 @@ namespace Mundos
         /// </summary>
         private void UpdateImGui()
         {
-            // Debug window
-            ImGui.Begin("Debug");
-            double fps = Math.Round(FPSAverage());
-            ImGui.Text($"FPS: {fps}");
-            ImGui.Separator();
-
-            // World management buttons
-            if (ImGui.Button("Save world"))
-            {
-                WorldManager.SaveWorld("world.xml");
-            }
-            ImGui.SameLine();
-            if (ImGui.Button("Load world"))
-            {
-                WorldManager.LoadWorld("world.xml");
-                _world = WorldManager.World;
-            }
-
-            // World tree view tab
-            if (ImGui.BeginTabBar("Mundos"))
-            {
-                ImGui.BeginTabItem("World");
-                {
-                    if (_world != null)
-                        EntityManager.DrawEntityTree();
-                    else
-                        ImGui.Text("No world loaded.");
-                    ImGui.EndTabItem();
-                }
-                ImGui.EndTabBar();
-            }
-
-            ImGui.End();
-
-            // Store current frame time
-            _frameTimes[_frameIndex] = Time.deltaTime;
-            _frameIndex = (_frameIndex + 1) % MaxFrameCount;
-        }
-
-        private const int MaxFrameCount = 120; // Number of frames to consider for average calculation
-        private double[] _frameTimes = new double[MaxFrameCount];
-        private int _frameIndex = 0;
-        private double FPSAverage()
-        {
-            double frameTimeSum = 0;
-            int frameCount = Math.Min(_frameIndex, MaxFrameCount);
-            for (int i = 0; i < frameCount; i++)
-            {
-                frameTimeSum += _frameTimes[i];
-            }
-            double averageFrameTime = frameTimeSum / frameCount;
-            double averageFPS = 1 / averageFrameTime;
-            return averageFPS;
+            ImGuiWindows.DrawEntityTreeWindow();
+            ImGuiWindows.DrawComponentWindow();
         }
 
         /// <summary>
@@ -155,6 +108,7 @@ namespace Mundos
         private void DrawWorld()
         {
             var queryDesc = new QueryDescription().WithAll<Position, Rotation, Scale, Mesh>();
+
             foreach(Chunk chunk in WorldManager.World.Query(queryDesc))
             {
                 Position[]  positions = chunk.GetArray<Position>();
@@ -162,23 +116,16 @@ namespace Mundos
                 Scale[]     scales = chunk.GetArray<Scale>();
                 Mesh[]      meshes = chunk.GetArray<Mesh>();
 
-
-                Matrix4 model = Matrix4.Identity;
-                Vector3 _position;
-                Vector3 _rotation;
-                Vector3 _scale;
-
                 foreach (int i in chunk)
                 {
-                    _position = positions[i].position;
-                    _rotation = rotations[i].rotation;
-                    _scale = scales[i].scale;
+                    Matrix4 model = Matrix4.Identity;
+                    Vector3 _rotation = WorldManager.GetEntityWorldRotation(chunk.Entities[i]);
 
-                    model *= Matrix4.CreateScale(_scale.X, _scale.Y, _scale.Z);
+                    model *= Matrix4.CreateScale(WorldManager.GetEntityWorldScale(chunk.Entities[i]));
                     model *= Matrix4.CreateRotationX(_rotation.X);
                     model *= Matrix4.CreateRotationY(_rotation.Y);
                     model *= Matrix4.CreateRotationZ(_rotation.Z);
-                    model *= Matrix4.CreateTranslation(_position.X, _position.Y, _position.Z);
+                    model *= Matrix4.CreateTranslation(WorldManager.GetEntityWorldPosition(chunk.Entities[i]));
 
                     DrawMesh(meshes[i], model); // TODO: Instead submit the mesh to the renderer and let it draw it
                 }
@@ -227,23 +174,6 @@ namespace Mundos
         protected override void OnTextInput(TextInputEventArgs e)
         {
             base.OnTextInput(e);
-            if ((char)e.Unicode == 'g') // If the user presses the 'g' key, toggle the cursor grab
-            {
-                if (CursorState == CursorState.Grabbed) // If the cursor is grabbed, release it
-                {
-                    CursorState = CursorState.Normal;
-                    WorldManager.GetActiveCamera(out Camera? camera);
-                    if (camera != null)
-                        camera.Locked = true;
-                }
-                else if (CursorState == CursorState.Normal) // If the cursor is not grabbed, grab it
-                {
-                    CursorState = CursorState.Grabbed;
-                    WorldManager.GetActiveCamera(out Camera? camera);
-                    if (camera != null)
-                        camera.Locked = false;
-                }
-            }
 
             _controller.PressChar((char)e.Unicode);
         }

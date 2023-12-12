@@ -5,14 +5,15 @@ using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Mundos {
-    public class CameraMove : MundosScript {
+    public class EditorCameraMove : MundosScript {
+        float moveSpeed;
+        float mouseSensitivity = 45f;
+
         public override void OnUpdate() {
-
-            float moveSpeed = 1f;
-            float mouseSensitivity = 45f;
-
+            // Get the camera component
             Camera cam = EntityManager.GetEntity(entityID).Get<Camera>();
 
+            // Increase move speed if shift is held
             if (Input.IsKeyDown(Keys.LeftShift)) {
                 moveSpeed = 4f;
             }
@@ -34,15 +35,23 @@ namespace Mundos {
                 position += moveSpeed * Time.deltaTimef * -cam.Right;
             }
             if (Input.IsKeyDown(Keys.Space)) {
-                position += moveSpeed * Time.deltaTimef * Vector3.UnitY;
+                position += moveSpeed * Time.deltaTimef * Vector3.UnitY; // Up
             }
             if (Input.IsKeyDown(Keys.LeftControl)) {
-                position += moveSpeed * Time.deltaTimef * -Vector3.UnitY;
+                position += moveSpeed * Time.deltaTimef * -Vector3.UnitY; // Down
             }
 
-            Vector2 mouseMoveDelta = Input.MouseMoveDelta();
-            rotation.X += mouseMoveDelta.Y * mouseSensitivity * Time.deltaTimef; rotation.X = MathHelper.Clamp(rotation.X, -89f, 89f);
-            rotation.Y += mouseMoveDelta.X * mouseSensitivity * Time.deltaTimef;
+            // Lock/unlock the camera
+            if (Input.IsKeyPressed(Keys.R)) {
+                cam.Locked = !cam.Locked;
+            }
+
+            // Only update rotation if the camera is locked to cursor (otherwise the mouse will jump when we unlock it)
+            if (cam.Locked) {
+                Vector2 mouseMoveDelta = Input.MouseMoveDelta();
+                rotation.X += mouseMoveDelta.Y * mouseSensitivity * Time.deltaTimef; rotation.X = MathHelper.Clamp(rotation.X, -89f, 89f);
+                rotation.Y += mouseMoveDelta.X * mouseSensitivity * Time.deltaTimef;
+            }
 
             base.OnUpdate();
         }

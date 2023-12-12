@@ -28,11 +28,12 @@ namespace Mundos
             // TODO: Load world from file
             _world = World.Create();
 
-            Entity entity1 = EntityManager.Create(EntityManager.ArchetypeType.Model, "Entity 1");
-            entity1.Set(new Position(entity1.Id, 0, 0, 0), new Rotation(entity1.Id, 0, 0, 0), new Scale(entity1.Id, 5, 1, 1), new Mesh(entity1.Id, 0, 0));
+            Entity groundEntity = EntityManager.Create(EntityManager.ArchetypeType.Model, "Ground");
+            groundEntity.Set(new Position(groundEntity.Id,  0, -1f, 0), new Rotation(groundEntity.Id, 0, 0, 0), new Scale(groundEntity.Id, 5, 1, 5), new Mesh(groundEntity.Id, 1, 1));
 
-            Entity entity2 = EntityManager.Create(EntityManager.ArchetypeType.Model, "Entity 2");
-            entity2.Set(new Position(entity1.Id,  0, -1f, 0), new Rotation(entity1.Id, 0, 0, 0), new Scale(entity1.Id, 1, 1, 1), new Mesh(entity1.Id, 1, 1));
+            Entity wallEntity = EntityManager.Create(EntityManager.ArchetypeType.Model, "Wall", groundEntity);
+            wallEntity.Set(new Position(wallEntity.Id, 0, 0.5f, -2.5f), new Rotation(wallEntity.Id, 0, 0, 0), new Scale(wallEntity.Id, 1, 1, 1), new Mesh(wallEntity.Id, 0, 0));
+
 
             return true;
         }
@@ -49,6 +50,46 @@ namespace Mundos
 
         internal static void SetActiveCamera(Camera camera) => _primaryCamera = camera;
         internal static void GetActiveCamera(out Camera? camera) => camera = _primaryCamera;
+        internal static Camera? GetActiveCamera() => _primaryCamera;
+
+        internal static Vector3 GetEntityWorldPosition(Entity entity)
+        {
+            Vector3 position = entity.Get<Position>().position;
+            Entity parent = EntityManager.EntityParents[entity];
+            while (parent != EntityManager.Root)
+            {
+                Position parentPosition = parent.Get<Position>();
+                position += parentPosition.position;
+                parent = EntityManager.EntityParents[parent];
+            }
+            return position;
+        }
+
+        internal static Vector3 GetEntityWorldRotation(Entity entity)
+        {
+            Vector3 rotation = entity.Get<Rotation>().rotation;
+            Entity parent = EntityManager.EntityParents[entity];
+            while (parent != EntityManager.Root)
+            {
+                Rotation parentRotation = parent.Get<Rotation>();
+                rotation += parentRotation.rotation;
+                parent = EntityManager.EntityParents[parent];
+            }
+            return rotation;
+        }
+
+        internal static Vector3 GetEntityWorldScale(Entity entity)
+        {
+            Vector3 scale = entity.Get<Scale>().scale;
+            Entity parent = EntityManager.EntityParents[entity];
+            while (parent != EntityManager.Root)
+            {
+                Scale parentScale = parent.Get<Scale>();
+                scale *= parentScale.scale;
+                parent = EntityManager.EntityParents[parent];
+            }
+            return scale;
+        }
 
         internal static World World => _world;
     }
