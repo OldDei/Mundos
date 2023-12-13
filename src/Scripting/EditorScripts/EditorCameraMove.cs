@@ -4,6 +4,7 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
+// TODO: Move this to the editor project
 namespace Mundos {
     public class EditorCameraMove : MundosScript {
         float moveSpeed;
