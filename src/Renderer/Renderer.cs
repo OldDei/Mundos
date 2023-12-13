@@ -230,5 +230,17 @@ namespace Mundos
 
             GL.BindVertexArray(0);
         }
+
+        public void SetVSync(bool enabled)
+        {
+            if (enabled)
+            {
+                Context.SwapInterval = 1;
+            }
+            else
+            {
+                Context.SwapInterval = 0;
+            }
+        }
     }
 }
