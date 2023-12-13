@@ -34,7 +34,6 @@ namespace Mundos
             Entity wallEntity = EntityManager.Create(EntityManager.ArchetypeType.Model, "Wall", groundEntity);
             wallEntity.Set(new Position(wallEntity.Id, 0, 0.5f, -2.5f), new Rotation(wallEntity.Id, 0, 0, 0), new Scale(wallEntity.Id, 1, 1, 1), new Mesh(wallEntity.Id, 0, 0));
 
-
             return true;
         }
 

@@ -784,11 +784,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\dev\\Mundos\\Mundos.csproj",
+      "projectUniqueName": "C:\\dev\\Engine\\Mundos\\Mundos.csproj",
       "projectName": "Mundos",
-      "projectPath": "C:\\dev\\Mundos\\Mundos.csproj",
+      "projectPath": "C:\\dev\\Engine\\Mundos\\Mundos.csproj",
       "packagesPath": "C:\\Users\\Michal\\.nuget\\packages\\",
-      "outputPath": "C:\\dev\\Mundos\\obj\\",
+      "outputPath": "C:\\dev\\Engine\\Mundos\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Michal\\AppData\\Roaming\\NuGet\\NuGet.Config",
