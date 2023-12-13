@@ -1,9 +1,4 @@
-﻿using System;
-using Arch.Core;
-using OpenTK.Graphics.ES20;
-using OpenTK.Mathematics;
-
-namespace Mundos
+﻿namespace Mundos
 {
     class Program
     {

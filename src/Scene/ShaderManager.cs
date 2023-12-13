@@ -7,14 +7,14 @@ namespace Mundos {
 
         static ShaderManager() {
             // Create default shader at index 0
-            shaders.Add(new Shader("src/Renderer/Shaders/shaderDefault.vert", "src/Renderer/Shaders/shaderDefault.frag"));
+            shaders.Add(new Shader("res/Shaders/shaderDefault.vert", "res/Shaders/shaderDefault.frag"));
 
             // Set default color for default shader
             Vector4 defaultColorR = new Vector4(0.5f, 0.2f, 0.2f, 1.0f);
             shaders[0].SetVector4("defaultColor", defaultColorR);
 
             // Create default shader at index 0
-            shaders.Add(new Shader("src/Renderer/Shaders/shaderDefault.vert", "src/Renderer/Shaders/shaderDefault.frag"));
+            shaders.Add(new Shader("res/Shaders/shaderDefault.vert", "res/Shaders/shaderDefault.frag"));
 
             // Set default color for default shader
             Vector4 defaultColorG = new Vector4(0.2f, 0.8f, 0.2f, 1.0f);

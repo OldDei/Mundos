@@ -5,7 +5,7 @@ using OpenTK.Mathematics;
 
 namespace Mundos
 {
-    internal static class WorldManager
+    public static class WorldManager
     {
         private static World _world;
         private static Camera? _primaryCamera;
@@ -23,7 +23,7 @@ namespace Mundos
         /// </summary>
         /// <param name="v">The name of the world to load.</param>
         /// <returns>True if the world was loaded successfully, otherwise false.</returns>
-        internal static bool LoadWorld(string v)
+        public static bool LoadWorld(string v)
         {
             // TODO: Load world from file
             _world = World.Create();

@@ -10,7 +10,7 @@ using System.Diagnostics;
 
 namespace Mundos
 {
-    internal class Renderer : GameWindow
+    public class Renderer : GameWindow
     {
         private int _vertexArrayObject;
         private int _vertexBufferObject;
