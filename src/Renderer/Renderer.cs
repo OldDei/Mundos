@@ -19,11 +19,6 @@ namespace Mundos
 
         public Renderer(int width, int height, string title) : base(GameWindowSettings.Default, new NativeWindowSettings() { Size = (width, height), Title = title })
         {
-            // Create a camera object at the origin TODO: Make a separate camera for the editor not in ECS
-            Entity camera = EntityManager.Create(EntityManager.ArchetypeType.Camera, "Editor Camera");
-            camera.Add(new Camera(camera.Id, Size.X / (float)Size.Y, true), new Position(camera.Id, 0, 0, 3f), new Rotation(camera.Id, 0, -90f, 0), new Scale(camera.Id, 1, 1, 1));
-            camera.Add(new Script(camera.Id, new EditorCameraMove()));
-
             _controller = new ImGuiController(width, height);
 
             Debug.WriteLine("Renderer initialized.");

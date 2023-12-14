@@ -18,7 +18,7 @@ namespace Mundos {
             _entityChildren.Add(_root, new List<Entity>()); // Add the root node to the children list
         }
 
-        internal static Entity Create(ArchetypeType archetype, string name, Entity? parent = null) {
+        public static Entity Create(ArchetypeType archetype, string name, Entity? parent = null) {
             Entity entity = WorldManager.World.Create(componentArchetypes[archetype]); // Create a new entity with the specified archetype
             Entity parentEntity = parent ?? _root; // If no parent is specified, use the root node
             _entities.Add(entity.Id, entity); // Add this entity to the entities list
@@ -29,19 +29,19 @@ namespace Mundos {
             return entity;
         }
 
-        internal static Entity GetEntity(int id) {
+        public static Entity GetEntity(int id) {
             return _entities[id];
         }
 
-        internal static Entity GetEntity(string name) {
+        public static Entity GetEntity(string name) {
             return _entityNames.FirstOrDefault(x => x.Value == name).Key;
         }
 
-        internal static void DestroyEntity(int id) {
+        public static void DestroyEntity(int id) {
             DestroyEntity(_entities[id]);
         }
 
-        internal static void DestroyEntity(Entity entity) {
+        public static void DestroyEntity(Entity entity) {
             _entityChildren[entity].ForEach(child => DestroyEntity(child)); // Destroy all children of this entity and their children
             _entityChildren.Remove(entity); // Remove this entity from the children list of its parent
             _entityNames.Remove(entity); // Remove this entity from the names list

@@ -35,12 +35,10 @@ namespace Mundos
         // Camera is locked to cursor
         public bool Locked = false;
 
-        public Camera(int entityID, float aspectRatio, bool isPrimaryCamera = false)
+        public Camera(int entityID, float aspectRatio)
         {
             this.AspectRatio = aspectRatio;
             this.entityID = entityID;
-            if (isPrimaryCamera)
-                WorldManager.SetActiveCamera(this);
         }
 
         // This is simply the aspect ratio of the viewport, used for the projection matrix.

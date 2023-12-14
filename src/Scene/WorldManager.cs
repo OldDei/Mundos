@@ -48,7 +48,7 @@ namespace Mundos
             return false;
         }
 
-        internal static void SetActiveCamera(Camera camera) => _primaryCamera = camera;
+        public static void SetActiveCamera(Camera camera) => _primaryCamera = camera;
         internal static void GetActiveCamera(out Camera? camera) => camera = _primaryCamera;
         internal static Camera? GetActiveCamera() => _primaryCamera;
 

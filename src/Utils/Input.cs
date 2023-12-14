@@ -32,7 +32,7 @@ namespace Mundos
             Input.mouse = mouse;
         }
 
-        internal static Vector2 MouseMoveDelta()
+        public static Vector2 MouseMoveDelta()
         {
             if (mouse == null)
                 return Vector2.Zero;
