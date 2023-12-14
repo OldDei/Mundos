@@ -64,7 +64,7 @@
           }
         }
       },
-      "ImGui.NET.Docking/1.75.0": {
+      "ImGui.NET.Branches.Docking/1.88.0": {
         "type": "package",
         "dependencies": {
           "System.Buffers": "4.4.0",
@@ -72,19 +72,23 @@
           "System.Runtime.CompilerServices.Unsafe": "4.4.0"
         },
         "compile": {
-          "lib/netstandard2.0/ImGui.NET.dll": {}
+          "lib/net6.0/ImGui.NET.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/ImGui.NET.dll": {}
+          "lib/net6.0/ImGui.NET.dll": {
+            "related": ".xml"
+          }
         },
         "runtimeTargets": {
           "runtimes/linux-x64/native/libcimgui.so": {
             "assetType": "native",
             "rid": "linux-x64"
           },
-          "runtimes/osx-x64/native/libcimgui.dylib": {
+          "runtimes/osx/native/libcimgui.dylib": {
             "assetType": "native",
-            "rid": "osx-x64"
+            "rid": "osx"
           },
           "runtimes/win-x64/native/cimgui.dll": {
             "assetType": "native",
@@ -448,19 +452,22 @@
         "lib/netstandard2.1/CommunityToolkit.HighPerformance.xml"
       ]
     },
-    "ImGui.NET.Docking/1.75.0": {
-      "sha512": "OR1NksDIaBcL1cLTx8CztG6Dvpgc7tu82JWYoYkerzWlsq4k160ZOG+YUo5OBaIkEDBGh/6AQ6Y0xF58FXo8PQ==",
+    "ImGui.NET.Branches.Docking/1.88.0": {
+      "sha512": "9m52Cts00w5sy1oETJ/ljTPrmXzGj1NyguxlYYsMhTL50/3JwvI5I81gRn/RbeOAELsYm35P5EDHrr4VCSa22Q==",
       "type": "package",
-      "path": "imgui.net.docking/1.75.0",
+      "path": "imgui.net.branches.docking/1.88.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "build/net40/ImGui.NET.targets",
-        "imgui.net.docking.1.75.0.nupkg.sha512",
-        "imgui.net.docking.nuspec",
+        "imgui.net.branches.docking.1.88.0.nupkg.sha512",
+        "imgui.net.branches.docking.nuspec",
+        "lib/net6.0/ImGui.NET.dll",
+        "lib/net6.0/ImGui.NET.xml",
         "lib/netstandard2.0/ImGui.NET.dll",
+        "lib/netstandard2.0/ImGui.NET.xml",
         "runtimes/linux-x64/native/libcimgui.so",
-        "runtimes/osx-x64/native/libcimgui.dylib",
+        "runtimes/osx/native/libcimgui.dylib",
         "runtimes/win-x64/native/cimgui.dll",
         "runtimes/win-x86/native/cimgui.dll"
       ]
@@ -773,32 +780,30 @@
   "projectFileDependencyGroups": {
     "net7.0": [
       "Arch >= 1.2.7",
-      "ImGui.NET.Docking >= 1.75.0",
+      "ImGui.NET.Branches.Docking >= 1.88.0",
       "OpenTK >= 4.8.1",
       "StbImageSharp >= 2.27.13"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Michal\\.nuget\\packages\\": {}
+    "C:\\Users\\michal.brecka\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\dev\\Engine\\Mundos\\Mundos.csproj",
+      "projectUniqueName": "C:\\Dev\\test\\Engine\\Mundos\\Mundos.csproj",
       "projectName": "Mundos",
-      "projectPath": "C:\\dev\\Engine\\Mundos\\Mundos.csproj",
-      "packagesPath": "C:\\Users\\Michal\\.nuget\\packages\\",
-      "outputPath": "C:\\dev\\Engine\\Mundos\\obj\\",
+      "projectPath": "C:\\Dev\\test\\Engine\\Mundos\\Mundos.csproj",
+      "packagesPath": "C:\\Users\\michal.brecka\\.nuget\\packages\\",
+      "outputPath": "C:\\Dev\\test\\Engine\\Mundos\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Michal\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\michal.brecka\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -821,9 +826,9 @@
             "target": "Package",
             "version": "[1.2.7, )"
           },
-          "ImGui.NET.Docking": {
+          "ImGui.NET.Branches.Docking": {
             "target": "Package",
-            "version": "[1.75.0, )"
+            "version": "[1.88.0, )"
           },
           "OpenTK": {
             "target": "Package",

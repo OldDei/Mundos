@@ -1,27 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\dev\\Engine\\Mundos\\Mundos.csproj": {}
+    "C:\\Dev\\test\\Engine\\Mundos\\Mundos.csproj": {}
   },
   "projects": {
-    "C:\\dev\\Engine\\Mundos\\Mundos.csproj": {
+    "C:\\Dev\\test\\Engine\\Mundos\\Mundos.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\dev\\Engine\\Mundos\\Mundos.csproj",
+        "projectUniqueName": "C:\\Dev\\test\\Engine\\Mundos\\Mundos.csproj",
         "projectName": "Mundos",
-        "projectPath": "C:\\dev\\Engine\\Mundos\\Mundos.csproj",
-        "packagesPath": "C:\\Users\\Michal\\.nuget\\packages\\",
-        "outputPath": "C:\\dev\\Engine\\Mundos\\obj\\",
+        "projectPath": "C:\\Dev\\test\\Engine\\Mundos\\Mundos.csproj",
+        "packagesPath": "C:\\Users\\michal.brecka\\.nuget\\packages\\",
+        "outputPath": "C:\\Dev\\test\\Engine\\Mundos\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Michal\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\michal.brecka\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -44,9 +42,9 @@
               "target": "Package",
               "version": "[1.2.7, )"
             },
-            "ImGui.NET.Docking": {
+            "ImGui.NET.Branches.Docking": {
               "target": "Package",
-              "version": "[1.75.0, )"
+              "version": "[1.88.0, )"
             },
             "OpenTK": {
               "target": "Package",

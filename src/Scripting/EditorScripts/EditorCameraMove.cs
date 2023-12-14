@@ -8,7 +8,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 namespace Mundos {
     public class EditorCameraMove : MundosScript {
         float moveSpeed;
-        float mouseSensitivity = 45f;
+        float mouseSensitivity = 10f;
 
         public override void OnUpdate() {
             // Get the camera component

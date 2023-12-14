@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="Arch" Version="1.2.7" />
-    <PackageReference Include="ImGui.NET.Docking" Version="1.75.0" />
+    <PackageReference Include="ImGui.NET.Branches.Docking" Version="1.88.0" />
     <PackageReference Include="OpenTK" Version="4.8.1" />
     <PackageReference Include="StbImageSharp" Version="2.27.13" />
   </ItemGroup>

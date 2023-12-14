@@ -9,7 +9,7 @@
       "Mundos/1.0.0": {
         "dependencies": {
           "Arch": "1.2.7",
-          "ImGui.NET.Docking": "1.75.0",
+          "ImGui.NET.Branches.Docking": "1.88.0",
           "OpenTK": "4.8.1",
           "StbImageSharp": "2.27.13"
         },
@@ -59,16 +59,16 @@
           }
         }
       },
-      "ImGui.NET.Docking/1.75.0": {
+      "ImGui.NET.Branches.Docking/1.88.0": {
         "dependencies": {
           "System.Buffers": "4.4.0",
           "System.Numerics.Vectors": "4.4.0",
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         },
         "runtime": {
-          "lib/netstandard2.0/ImGui.NET.dll": {
-            "assemblyVersion": "1.75.0.0",
-            "fileVersion": "1.75.0.0"
+          "lib/net6.0/ImGui.NET.dll": {
+            "assemblyVersion": "1.88.0.0",
+            "fileVersion": "1.88.0.0"
           }
         },
         "runtimeTargets": {
@@ -77,8 +77,8 @@
             "assetType": "native",
             "fileVersion": "0.0.0.0"
           },
-          "runtimes/osx-x64/native/libcimgui.dylib": {
-            "rid": "osx-x64",
+          "runtimes/osx/native/libcimgui.dylib": {
+            "rid": "osx",
             "assetType": "native",
             "fileVersion": "0.0.0.0"
           },
@@ -304,12 +304,12 @@
       "path": "communitytoolkit.highperformance/7.1.2",
       "hashPath": "communitytoolkit.highperformance.7.1.2.nupkg.sha512"
     },
-    "ImGui.NET.Docking/1.75.0": {
+    "ImGui.NET.Branches.Docking/1.88.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-OR1NksDIaBcL1cLTx8CztG6Dvpgc7tu82JWYoYkerzWlsq4k160ZOG+YUo5OBaIkEDBGh/6AQ6Y0xF58FXo8PQ==",
-      "path": "imgui.net.docking/1.75.0",
-      "hashPath": "imgui.net.docking.1.75.0.nupkg.sha512"
+      "sha512": "sha512-9m52Cts00w5sy1oETJ/ljTPrmXzGj1NyguxlYYsMhTL50/3JwvI5I81gRn/RbeOAELsYm35P5EDHrr4VCSa22Q==",
+      "path": "imgui.net.branches.docking/1.88.0",
+      "hashPath": "imgui.net.branches.docking.1.88.0.nupkg.sha512"
     },
     "Microsoft.Extensions.ObjectPool/7.0.0": {
       "type": "package",
