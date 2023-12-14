@@ -42,7 +42,7 @@ namespace Mundos
         /// </summary>
         /// <param name="v">The name of the file to save the world to.</param>
         /// <returns>True if the world was saved successfully, otherwise false.</returns>
-        internal static bool SaveWorld(string v)
+        public static bool SaveWorld(string v)
         {
             // TODO: Save world to file
             return false;
@@ -91,6 +91,6 @@ namespace Mundos
             return scale;
         }
 
-        internal static World World => _world;
+        public static World World => _world;
     }
 }

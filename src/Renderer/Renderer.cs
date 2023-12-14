@@ -92,13 +92,19 @@ namespace Mundos
         }
 
         /// <summary>
-        /// Updates the ImGui user interface.
-        /// TODO: This should probably be moved to a separate class.
+        /// Updates registered ImGui functions.
         /// </summary>
-        private void UpdateImGui()
+        public void UpdateImGui() {
+            foreach (Action function in _imGuiRenderFunctions)
+            {
+                function();
+            }
+        }
+
+        private List<Action> _imGuiRenderFunctions = new List<Action>();
+        public void RegisterImGuiRenderFunction(Action function)
         {
-            ImGuiWindows.DrawEntityTreeWindow();
-            ImGuiWindows.DrawComponentWindow();
+            _imGuiRenderFunctions.Add(function);
         }
 
         /// <summary>

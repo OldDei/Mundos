@@ -3,7 +3,7 @@ using Arch.Core.Utils;
 using ImGuiNET;
 
 namespace Mundos {
-    internal static class EntityManager {
+    public static class EntityManager {
         private static Dictionary<int, Entity> _entities = new Dictionary<int, Entity>(); // Contains all IDs and entities in the scene
         private static Dictionary<Entity, string> _entityNames = new Dictionary<Entity, string>(); // Contains all entities and their names
         private static Dictionary<Entity, Entity> _entityParents = new Dictionary<Entity, Entity>(); // Contains all entities and their parents

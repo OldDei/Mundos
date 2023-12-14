@@ -12,7 +12,7 @@ namespace Mundos
 
     // TL;DR: This is just one of many ways in which we could have set up the camera.
     // Check out the web version if you don't know why we are doing a specific thing or want to know more about the code.
-    internal class Camera
+    public class Camera
     {
         public int entityID; // ID of entity this component is attached to
 
