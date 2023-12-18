@@ -8,7 +8,6 @@ namespace Mundos
     public static class WorldManager
     {
         private static World _world;
-        private static Camera? _primaryCamera;
 
         static WorldManager()
         {
@@ -47,10 +46,6 @@ namespace Mundos
             // TODO: Save world to file
             return false;
         }
-
-        public static void SetActiveCamera(Camera camera) => _primaryCamera = camera;
-        internal static void GetActiveCamera(out Camera? camera) => camera = _primaryCamera;
-        internal static Camera? GetActiveCamera() => _primaryCamera;
 
         internal static Vector3 GetEntityWorldPosition(Entity entity)
         {

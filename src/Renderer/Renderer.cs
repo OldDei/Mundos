@@ -61,7 +61,7 @@ namespace Mundos
             Input.UpdateState(this.KeyboardState, this.MouseState);
 
             // Camera lock
-            WorldManager.GetActiveCamera(out Camera? camera);
+            EntityManager.GetActiveCamera(out Camera? camera);
             if (camera != null && camera.Locked)
             {
                 CursorState = CursorState.Grabbed;
@@ -152,7 +152,7 @@ namespace Mundos
             base.OnResize(e);
 
             GL.Viewport(0, 0, e.Width, e.Height);
-            WorldManager.GetActiveCamera(out Camera? camera);
+            EntityManager.GetActiveCamera(out Camera? camera);
             if (camera != null)
                 camera.AspectRatio = Size.X / (float)Size.Y;
 
@@ -220,7 +220,7 @@ namespace Mundos
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
             GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
 
-            WorldManager.GetActiveCamera(out Camera? camera); // Get the active camera from the world
+            EntityManager.GetActiveCamera(out Camera? camera); // Get the active camera from the world
             if (camera == null) // If there's no camera, we can't draw anything
                 return;
 

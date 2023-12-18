@@ -9,6 +9,7 @@ namespace Mundos {
         private static Dictionary<Entity, Entity> _entityParents = new Dictionary<Entity, Entity>(); // Contains all entities and their parents
         private static Dictionary<Entity, List<Entity>> _entityChildren = new Dictionary<Entity, List<Entity>>(); // Contains all entities and their children
         private static Entity _root = WorldManager.World.Create(); // Root node of the scene
+        private static Camera? _primaryCamera; // The primary camera of the scene
 
         static EntityManager() {
             // EntityManager will create a root node for the scene
@@ -56,6 +57,10 @@ namespace Mundos {
             _entities.Remove(entity.Id); // Remove this entity from the entities list
             WorldManager.World.Destroy(entity); // Destroy this entity
         }
+
+        public static void SetActiveCamera(Camera camera) => _primaryCamera = camera;
+        internal static void GetActiveCamera(out Camera? camera) => camera = _primaryCamera;
+        internal static Camera? GetActiveCamera() => _primaryCamera;
 
         public static Dictionary<int, Entity> Entities { get => _entities;}
         public static Dictionary<Entity, string> EntityNames { get => _entityNames;}
