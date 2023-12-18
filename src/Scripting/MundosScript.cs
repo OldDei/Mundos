@@ -7,7 +7,6 @@ using OpenTK.Mathematics;
 /// </summary>
 public abstract class MundosScript
 {
-#pragma warning disable CS0169 // Remove unused private members
     public int entityID { get; set;} = 0; // ID of entity this component is attached to
     private Vector3 EntityPosition {
         get => Mundos.EntityManager.GetEntity(entityID).Get<Position>().position;
@@ -24,7 +23,6 @@ public abstract class MundosScript
         set => Mundos.EntityManager.GetEntity(entityID).Set(new Scale(entityID, value));
     }
     protected Vector3 scale;
-#pragma warning restore CS0169 // Remove unused private members
 
     /// <summary>
     /// Called when the script is created.

@@ -29,6 +29,13 @@ namespace Mundos {
             return entity;
         }
 
+        public static Entity CreateNoRelation(ArchetypeType archetype, string name) {
+            Entity entity = WorldManager.World.Create(componentArchetypes[archetype]); // Create a new entity with the specified archetype
+            _entities.Add(entity.Id, entity); // Add this entity to the entities list
+            _entityNames.Add(entity, name); // Add this entity to the names list
+            return entity;
+        }
+
         public static Entity GetEntity(int id) {
             return _entities[id];
         }
