@@ -3,6 +3,10 @@ using Arch.Core.Utils;
 using ImGuiNET;
 
 namespace Mundos {
+    /// <summary>
+    /// The EntityManager class is responsible for managing entities in the scene graph.
+    /// It provides methods for creating, retrieving, and destroying entities, as well as setting and getting the active camera.
+    /// </summary>
     public static class EntityManager {
         private static Dictionary<int, Entity> _entities = new Dictionary<int, Entity>(); // Contains all IDs and entities in the scene
         private static Dictionary<Entity, string> _entityNames = new Dictionary<Entity, string>(); // Contains all entities and their names

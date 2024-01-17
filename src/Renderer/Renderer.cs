@@ -10,6 +10,10 @@ using System.Diagnostics;
 
 namespace Mundos
 {
+    /// <summary>
+    /// The Renderer class is responsible for rendering the game window and drawing the world.
+    /// It inherits from the GameWindow class and provides methods for updating and rendering the game.
+    /// </summary>
     public class Renderer : GameWindow
     {
         private int _vertexArrayObject;
