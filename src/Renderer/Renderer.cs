@@ -53,7 +53,7 @@ namespace Mundos
             _frameBufferObject = GL.GenFramebuffer();
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, _frameBufferObject);
 
-            GL.GenTextures(1, out _textureColorBuffer);
+            _textureColorBuffer = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, _textureColorBuffer);
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, Size.X, Size.Y, 0, PixelFormat.Rgb, PixelType.UnsignedByte, IntPtr.Zero);
             GL.TexParameterI(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, new int[] { (int)TextureMinFilter.Linear });
@@ -65,9 +65,14 @@ namespace Mundos
             _renderBufferObject = GL.GenRenderbuffer();
             GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, _renderBufferObject);
             GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferStorage.Depth24Stencil8, Size.X, Size.Y);
+            GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, 0);
+
             GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthStencilAttachment, RenderbufferTarget.Renderbuffer, _renderBufferObject);
 
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            if (GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer) != FramebufferErrorCode.FramebufferComplete)
+            {
+                Console.WriteLine("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
+            }
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -93,60 +98,20 @@ namespace Mundos
                 CursorState = CursorState.Normal;
             }
 
-            // World update
-            UpdateWorld();
-
-            // Draw the world to a framebuffer
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, _frameBufferObject);
-            GL.Enable(EnableCap.DepthTest);
-            GL.ClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+            // Clear the color buffer
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-            // Draw the world
-            DrawWorld();
-
-            // Back to the default
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-            GL.Disable(EnableCap.DepthTest);
-
-            // Draw the framebuffer to the screen
-            DrawFramebuffer(_frameBufferObject);
-            ShaderManager.GetShader(_frameBufferShaderIndex).Use();
-            GL.BindTexture(TextureTarget.Texture2D, _textureColorBuffer);
-            GL.BindVertexArray(quadVAO);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
 
             // ImGui update
             UpdateImGui();
             _controller.Render();
 
+            // World update
+            UpdateWorld();
+
             ImGuiController.CheckGLError("End of frame");
 
             // Swap the front and back buffers of the window
             SwapBuffers();
-        }
-
-        private int quadVAO, quadVBO;
-        private void DrawFramebuffer(int frameBufferObject)
-        {
-            quadVAO = GL.GenVertexArray();
-            quadVBO = GL.GenBuffer();
-            GL.BindVertexArray(quadVAO);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, quadVBO);
-            GL.BufferData(BufferTarget.ArrayBuffer, 6 * sizeof(float) * 4, new float[] {
-                // positions   // texCoords
-                -1.0f,  1.0f,  0.0f, 1.0f,
-                -1.0f, -1.0f,  0.0f, 0.0f,
-                 1.0f, -1.0f,  1.0f, 0.0f,
-
-                -1.0f,  1.0f,  0.0f, 1.0f,
-                 1.0f, -1.0f,  1.0f, 0.0f,
-                 1.0f,  1.0f,  1.0f, 1.0f
-            }, BufferUsageHint.StaticDraw);
-            GL.EnableVertexAttribArray(0);
-            GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 4 * sizeof(float), 0);
-            GL.EnableVertexAttribArray(1);
-            GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 4 * sizeof(float), 2 * sizeof(float));
         }
 
         /// <summary>
@@ -259,6 +224,19 @@ namespace Mundos
 
             GL.BindVertexArray(0);
             GL.DeleteVertexArray(_vertexArrayObject);
+
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            GL.DeleteFramebuffer(_frameBufferObject);
+
+            GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, 0);
+            GL.DeleteRenderbuffer(_renderBufferObject);
+
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+            GL.DeleteTexture(_textureColorBuffer);
+
+            _controller.Dispose();
+
+            Console.WriteLine("Renderer unloaded.");
         }
 
         /// <summary>
@@ -314,17 +292,36 @@ namespace Mundos
         /// <returns>The generated texture ID.</returns>
         public int GetFBOTexture(out int texture)
         {
-            texture = GL.GenTexture();
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, _frameBufferObject);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            GL.Enable(EnableCap.DepthTest);
 
-            // GL.BindTexture(TextureTarget.Texture2D, texture);
-            // GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, Size.X, Size.Y, 0, PixelFormat.Rgb, PixelType.UnsignedByte, IntPtr.Zero);
-            // GL.BindTexture(TextureTarget.Texture2D, 0);
+            DrawWorld();
 
-            // GL.BindFramebuffer(FramebufferTarget.Framebuffer, _frameBufferObject[0]);
-            // GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, texture, 0);
-            // GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+
+            texture = _textureColorBuffer;
 
             return texture;
+        }
+
+        public void FBOResize(int width, int height)
+        {
+            GL.BindTexture(TextureTarget.Texture2D, _textureColorBuffer);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, width, height, 0, PixelFormat.Rgb, PixelType.UnsignedByte, IntPtr.Zero);
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+
+            GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, _renderBufferObject);
+            GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferStorage.Depth24Stencil8, width, height);
+            GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, 0);
+
+            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, _textureColorBuffer, 0);
+            GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthStencilAttachment, RenderbufferTarget.Renderbuffer, _renderBufferObject);
+
+            if (GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer) != FramebufferErrorCode.FramebufferComplete)
+            {
+                Console.WriteLine("ERROR::FRAMEBUFFER:: Framebuffer resize failed!");
+            }
         }
     }
 }
