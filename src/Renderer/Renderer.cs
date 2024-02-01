@@ -19,17 +19,19 @@ namespace Mundos
         private int _vertexArrayObject;
         private int _vertexBufferObject;
         private int _elementBufferObject;
+        private int _textureColorBuffer;
+        private int _renderBufferObject;
+        private int _frameBufferObject;
+        private int _frameBufferShaderIndex;
         private ImGuiController _controller;
 
         public Renderer(int width, int height, string title) : base(GameWindowSettings.Default, new NativeWindowSettings() { Size = (width, height), Title = title })
         {
             _controller = new ImGuiController(width, height);
 
-            // Create a camera object at the origin TODO: Make a separate camera for the editor not in ECS
-            // Entity camera = EntityManager.Create(EntityManager.ArchetypeType.Camera, "Editor Camera");
-            // camera.Add(new Camera(camera.Id, Size.X / (float)Size.Y), new Position(camera.Id, 0, 0, 3f), new Rotation(camera.Id, 0, -90f, 0), new Scale(camera.Id, 1, 1, 1));
+            _frameBufferShaderIndex = ShaderManager.NewShader("res/Shaders/shaderFramebuffer.vert", "res/Shaders/shaderFramebuffer.frag");
 
-            Debug.WriteLine("Renderer initialized.");
+            Console.WriteLine("Renderer initialized.");
         }
 
         protected override void OnLoad()
@@ -48,8 +50,24 @@ namespace Mundos
             _elementBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
 
-            // We enable depth testing here
-            GL.Enable(EnableCap.DepthTest);
+            _frameBufferObject = GL.GenFramebuffer();
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, _frameBufferObject);
+
+            GL.GenTextures(1, out _textureColorBuffer);
+            GL.BindTexture(TextureTarget.Texture2D, _textureColorBuffer);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, Size.X, Size.Y, 0, PixelFormat.Rgb, PixelType.UnsignedByte, IntPtr.Zero);
+            GL.TexParameterI(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, new int[] { (int)TextureMinFilter.Linear });
+            GL.TexParameterI(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, new int[] { (int)TextureMagFilter.Linear });
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+
+            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, _textureColorBuffer, 0);
+
+            _renderBufferObject = GL.GenRenderbuffer();
+            GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, _renderBufferObject);
+            GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferStorage.Depth24Stencil8, Size.X, Size.Y);
+            GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthStencilAttachment, RenderbufferTarget.Renderbuffer, _renderBufferObject);
+
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -78,11 +96,25 @@ namespace Mundos
             // World update
             UpdateWorld();
 
-            // Clear the screen
+            // Draw the world to a framebuffer
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, _frameBufferObject);
+            GL.Enable(EnableCap.DepthTest);
+            GL.ClearColor(0.2f, 0.2f, 0.2f, 1.0f);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             // Draw the world
             DrawWorld();
+
+            // Back to the default
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            GL.Disable(EnableCap.DepthTest);
+
+            // Draw the framebuffer to the screen
+            DrawFramebuffer(_frameBufferObject);
+            ShaderManager.GetShader(_frameBufferShaderIndex).Use();
+            GL.BindTexture(TextureTarget.Texture2D, _textureColorBuffer);
+            GL.BindVertexArray(quadVAO);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
 
             // ImGui update
             UpdateImGui();
@@ -92,6 +124,29 @@ namespace Mundos
 
             // Swap the front and back buffers of the window
             SwapBuffers();
+        }
+
+        private int quadVAO, quadVBO;
+        private void DrawFramebuffer(int frameBufferObject)
+        {
+            quadVAO = GL.GenVertexArray();
+            quadVBO = GL.GenBuffer();
+            GL.BindVertexArray(quadVAO);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, quadVBO);
+            GL.BufferData(BufferTarget.ArrayBuffer, 6 * sizeof(float) * 4, new float[] {
+                // positions   // texCoords
+                -1.0f,  1.0f,  0.0f, 1.0f,
+                -1.0f, -1.0f,  0.0f, 0.0f,
+                 1.0f, -1.0f,  1.0f, 0.0f,
+
+                -1.0f,  1.0f,  0.0f, 1.0f,
+                 1.0f, -1.0f,  1.0f, 0.0f,
+                 1.0f,  1.0f,  1.0f, 1.0f
+            }, BufferUsageHint.StaticDraw);
+            GL.EnableVertexAttribArray(0);
+            GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 4 * sizeof(float), 0);
+            GL.EnableVertexAttribArray(1);
+            GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 4 * sizeof(float), 2 * sizeof(float));
         }
 
         /// <summary>
@@ -250,6 +305,26 @@ namespace Mundos
             {
                 Context.SwapInterval = 0;
             }
+        }
+
+        /// <summary>
+        /// Generates a framebuffer object (FBO) texture and returns the texture ID.
+        /// </summary>
+        /// <param name="texture">The output parameter that will hold the generated texture ID.</param>
+        /// <returns>The generated texture ID.</returns>
+        public int GetFBOTexture(out int texture)
+        {
+            texture = GL.GenTexture();
+
+            // GL.BindTexture(TextureTarget.Texture2D, texture);
+            // GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, Size.X, Size.Y, 0, PixelFormat.Rgb, PixelType.UnsignedByte, IntPtr.Zero);
+            // GL.BindTexture(TextureTarget.Texture2D, 0);
+
+            // GL.BindFramebuffer(FramebufferTarget.Framebuffer, _frameBufferObject[0]);
+            // GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, texture, 0);
+            // GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+
+            return texture;
         }
     }
 }
