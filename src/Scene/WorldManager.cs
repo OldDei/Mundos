@@ -31,7 +31,7 @@ namespace Mundos
             groundEntity.Set(new Position(groundEntity.Id,  0, -1f, 0), new Rotation(groundEntity.Id, 0, 0, 0), new Scale(groundEntity.Id, 5, 1, 5), new Mesh(groundEntity.Id, 1, 1));
 
             Entity wallEntity = EntityManager.Create(EntityManager.ArchetypeType.Model, "Wall", groundEntity);
-            wallEntity.Set(new Position(wallEntity.Id, 0, 0.5f, -2.5f), new Rotation(wallEntity.Id, 0, 0, 0), new Scale(wallEntity.Id, 1, 1, 1), new Mesh(wallEntity.Id, 0, 0));
+            wallEntity.Set(new Position(wallEntity.Id, 0, 0.5f, -0.5f), new Rotation(wallEntity.Id, 0, 0, 0), new Scale(wallEntity.Id, 1, 1, 1), new Mesh(wallEntity.Id, 0, 0));
 
             return true;
         }
@@ -47,43 +47,31 @@ namespace Mundos
             return false;
         }
 
-        internal static Vector3 GetEntityWorldPosition(Entity entity)
+        /// <summary>
+        /// Calculates the model matrix for the specified entity.
+        /// The model matrix is a transformation matrix that represents the position, rotation and scale of the entity.
+        /// The model matrix is calculated by multiplying the position, rotation and scale matrices together.
+        /// The resulting matrix includes all transformations due to rotation and scale of parents as well.
+        /// </summary>
+        /// <param name="entity">The entity for which to calculate the model matrix.</param>
+        /// <returns>The model matrix for the specified entity.</returns>
+        internal static Matrix4 GetModelMatrix(Entity entity)
         {
-            Vector3 position = entity.Get<Position>().position;
-            Entity parent = EntityManager.EntityParents[entity];
-            while (parent != EntityManager.Root)
-            {
-                Position parentPosition = parent.Get<Position>();
-                position += parentPosition.position;
-                parent = EntityManager.EntityParents[parent];
-            }
-            return position;
-        }
+            Matrix4 modelMatrix = Matrix4.Identity;
 
-        internal static Vector3 GetEntityWorldRotation(Entity entity)
-        {
-            Vector3 rotation = entity.Get<Rotation>().rotation;
-            Entity parent = EntityManager.EntityParents[entity];
-            while (parent != EntityManager.Root)
-            {
-                Rotation parentRotation = parent.Get<Rotation>();
-                rotation += parentRotation.rotation;
-                parent = EntityManager.EntityParents[parent];
-            }
-            return rotation;
-        }
+            // Apply own transformations
+            modelMatrix *= Matrix4.CreateScale(entity.Get<Scale>().scale);
+            modelMatrix *= Matrix4.CreateFromQuaternion(entity.Get<Rotation>().rotationQuaternion);
+            modelMatrix *= Matrix4.CreateTranslation(entity.Get<Position>().position);
 
-        internal static Vector3 GetEntityWorldScale(Entity entity)
-        {
-            Vector3 scale = entity.Get<Scale>().scale;
+            // Apply parent transformations
             Entity parent = EntityManager.EntityParents[entity];
-            while (parent != EntityManager.Root)
-            {
-                Scale parentScale = parent.Get<Scale>();
-                scale *= parentScale.scale;
+            while (parent != EntityManager.Root) {
+                modelMatrix *= GetModelMatrix(parent);
                 parent = EntityManager.EntityParents[parent];
             }
-            return scale;
+
+            return modelMatrix;
         }
 
         public static World World => _world;

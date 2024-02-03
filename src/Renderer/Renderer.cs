@@ -140,22 +140,11 @@ namespace Mundos
 
             foreach(Chunk chunk in WorldManager.World.Query(queryDesc))
             {
-                Position[]  positions = chunk.GetArray<Position>();
-                Rotation[]  rotations = chunk.GetArray<Rotation>();
-                Scale[]     scales = chunk.GetArray<Scale>();
-                Mesh[]      meshes = chunk.GetArray<Mesh>();
+                Mesh[] meshes = chunk.GetArray<Mesh>();
 
                 foreach (int i in chunk)
                 {
-                    Matrix4 model = Matrix4.Identity;
-                    Vector3 _rotation = WorldManager.GetEntityWorldRotation(chunk.Entities[i]);
-
-                    model *= Matrix4.CreateScale(WorldManager.GetEntityWorldScale(chunk.Entities[i]));
-                    model *= Matrix4.CreateRotationX(_rotation.X);
-                    model *= Matrix4.CreateRotationY(_rotation.Y);
-                    model *= Matrix4.CreateRotationZ(_rotation.Z);
-                    model *= Matrix4.CreateTranslation(WorldManager.GetEntityWorldPosition(chunk.Entities[i]));
-
+                    Matrix4 model = WorldManager.GetModelMatrix(chunk.Entities[i]);
                     DrawMesh(meshes[i], model); // TODO: Instead submit the mesh to the renderer and let it draw it
                 }
             }

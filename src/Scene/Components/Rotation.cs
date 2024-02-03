@@ -16,6 +16,21 @@ public struct Rotation
     public Vector3 rotation;
 
     /// <summary>
+    /// The rotation value as a quaternion.
+    /// </summary>
+    public Quaternion rotationQuaternion => Quaternion.FromEulerAngles(rotation);
+
+    /// <summary>
+    /// The rotation value as a matrix.
+    /// </summary>
+    public Matrix4 rotationMatrix => Matrix4.CreateFromQuaternion(rotationQuaternion);
+
+    /// <summary>
+    /// The rotation value as Euler angles.
+    /// </summary>
+    public Vector3 rotationEulerAngles => rotation;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="Rotation"/> struct.
     /// </summary>
     /// <param name="entityID">The ID of the entity.</param>
