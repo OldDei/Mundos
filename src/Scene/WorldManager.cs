@@ -43,7 +43,7 @@ namespace Mundos
         /// <returns>True if the world was saved successfully, otherwise false.</returns>
         public static bool SaveWorld(string v)
         {
-            // TODO: Save world to file
+            Serializer.SaveWorld(v, _world);
             return false;
         }
 
