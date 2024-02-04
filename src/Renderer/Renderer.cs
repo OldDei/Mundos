@@ -295,22 +295,6 @@ namespace Mundos
         }
 
         /// <summary>
-        /// Sets the vertical synchronization (VSync) for the renderer.
-        /// </summary>
-        /// <param name="enabled">A boolean value indicating whether VSync is enabled or disabled.</param>
-        public void SetVSync(bool enabled)
-        {
-            if (enabled)
-            {
-                Context.SwapInterval = 1;
-            }
-            else
-            {
-                Context.SwapInterval = 0;
-            }
-        }
-
-        /// <summary>
         /// Generates a framebuffer object (FBO) texture and returns the texture ID.
         /// </summary>
         /// <param name="texture">The output parameter that will hold the generated texture ID.</param>
@@ -368,6 +352,38 @@ namespace Mundos
 
             // Update the ImGui controller
             _controller.WindowResized(ClientSize.X, ClientSize.Y);
+        }
+
+        /// <summary>
+        /// Maximizes or restores the window based on the specified flag.
+        /// </summary>
+        /// <param name="maximize">A flag indicating whether to maximize the window.</param>
+        public void MaximizeWindow(bool maximize)
+        {
+            if (maximize)
+            {
+                WindowState = WindowState.Maximized;
+            }
+            else
+            {
+                WindowState = WindowState.Normal;
+            }
+        }
+
+        /// <summary>
+        /// Sets the vertical synchronization (VSync) for the renderer.
+        /// </summary>
+        /// <param name="enabled">A boolean value indicating whether VSync is enabled or disabled.</param>
+        public void SetVSync(bool enabled)
+        {
+            if (enabled)
+            {
+                Context.SwapInterval = 1;
+            }
+            else
+            {
+                Context.SwapInterval = 0;
+            }
         }
     }
 }
