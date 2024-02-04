@@ -142,10 +142,10 @@ namespace Mundos {
         /// </summary>
         public static Dictionary<ArchetypeType, ComponentType[]> componentArchetypes = new Dictionary<ArchetypeType, ComponentType[]>()
         {
-            { ArchetypeType.EmptyNode,  new ComponentType[]{ typeof(Position), typeof(Rotation), typeof(Scale)                                  } },
-            { ArchetypeType.Model,      new ComponentType[]{ typeof(Position), typeof(Rotation), typeof(Scale), typeof(Mesh)                    } },
-            { ArchetypeType.Camera,     new ComponentType[]{ typeof(Position), typeof(Rotation), typeof(Scale), typeof(Camera), typeof(Script)  } },
-            { ArchetypeType.Script,     new ComponentType[]{ typeof(Script)                                                                     } }
+            { ArchetypeType.EmptyNode,  new ComponentType[]{ typeof(UUID), typeof(Position), typeof(Rotation), typeof(Scale)                                  } },
+            { ArchetypeType.Model,      new ComponentType[]{ typeof(UUID), typeof(Position), typeof(Rotation), typeof(Scale), typeof(Mesh)                    } },
+            { ArchetypeType.Camera,     new ComponentType[]{ typeof(UUID), typeof(Position), typeof(Rotation), typeof(Scale), typeof(Camera), typeof(Script)  } },
+            { ArchetypeType.Script,     new ComponentType[]{ typeof(UUID), typeof(Script)                                                                     } }
         };
 
         /// <summary>

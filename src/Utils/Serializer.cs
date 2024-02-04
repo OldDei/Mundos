@@ -27,9 +27,12 @@ namespace Mundos
 
             foreach (Entity entity in EntityManager.Entities.Values)
             {
-                Dictionary<string, object> entityData = new Dictionary<string, object>();
-                entityData.Add("Id", entity.Id);
-                entityData.Add("Name", EntityManager.EntityNames[entity]);
+                if (entity == EntityManager.Root) continue; // Skip the root node
+
+                Dictionary<string, object> entityData = new Dictionary<string, object>
+                {
+                    { "Name", EntityManager.EntityNames[entity] }
+                };
 
                 object[] components = entity.GetAllComponents();
                 foreach (object component in components)
@@ -37,14 +40,17 @@ namespace Mundos
                     Dictionary<string, object> componentData = new Dictionary<string, object>(); // some components have more than one field
                     switch (component.GetType().Name)
                     {
+                        case "UUID":
+                            entityData.Add("UUID", ((UUID)component).UniversalUniqueID.ToString());
+                            break;
                         case "Position":
-                            entityData.Add("Position", ((Position)component).position.ToString());
+                            entityData.Add("Position", ((Position)component).position.X.ToString() + ";" + ((Position)component).position.Y.ToString() + ";" + ((Position)component).position.Z.ToString());
                             break;
                         case "Rotation":
-                            entityData.Add("Rotation", ((Rotation)component).rotation.ToString());
+                            entityData.Add("Rotation", ((Rotation)component).rotation.X.ToString() + ";" + ((Rotation)component).rotation.Y.ToString() + ";" + ((Rotation)component).rotation.Z.ToString());
                             break;
                         case "Scale":
-                            entityData.Add("Scale", ((Scale)component).scale.ToString());
+                            entityData.Add("Scale", ((Scale)component).scale.X.ToString() + ";" + ((Scale)component).scale.Y.ToString() + ";" + ((Scale)component).scale.Z.ToString());
                             break;
                         case "Mesh":
                             componentData.Add("Mesh", ((Mesh)component).meshIndex);
