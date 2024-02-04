@@ -6,6 +6,7 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using System;
 using System.Diagnostics;
 
 namespace Mundos
@@ -279,8 +280,10 @@ namespace Mundos
         /// </summary>
         /// <param name="texture">The output parameter that will hold the generated texture ID.</param>
         /// <returns>The generated texture ID.</returns>
-        public int GetFBOTexture(out int texture)
+        public int GetFBOTexture(Vector2 size, out int texture)
         {
+            GL.Viewport(0, 0, (int)size.X, (int)size.Y);
+
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, _frameBufferObject);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.Enable(EnableCap.DepthTest);
@@ -290,6 +293,8 @@ namespace Mundos
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 
             texture = _textureColorBuffer;
+
+            GL.Viewport(0, 0, ClientSize.X, ClientSize.Y);
 
             return texture;
         }
@@ -311,6 +316,12 @@ namespace Mundos
             {
                 Console.WriteLine("ERROR::FRAMEBUFFER:: Framebuffer resize failed!");
             }
+
+            EntityManager.GetActiveCamera(out Camera? camera);
+            if (camera != null)
+                camera.AspectRatio = Size.X / (float)Size.Y;
+
+            _controller.WindowResized(ClientSize.X, ClientSize.Y);
         }
     }
 }
