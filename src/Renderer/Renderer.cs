@@ -25,6 +25,7 @@ namespace Mundos
         private int _frameBufferObject;
         private int _frameBufferShaderIndex;
         private ImGuiController _controller;
+        private List<Action> _imGuiRenderFunctions = new List<Action>();
 
         public Renderer(int width, int height, string title) : base(GameWindowSettings.Default, new NativeWindowSettings() { Size = (width, height), Title = title })
         {
@@ -35,6 +36,10 @@ namespace Mundos
             Console.WriteLine("Renderer initialized.");
         }
 
+        /// <summary>
+        /// Called when the renderer is loaded.
+        /// It is responsible for setting the clear color and generating the vertex array and buffer objects.
+        /// </summary>
         protected override void OnLoad()
         {
             base.OnLoad();
@@ -76,6 +81,10 @@ namespace Mundos
             }
         }
 
+        /// <summary>
+        /// Called when a frame is rendered. Updates delta times, input state, camera lock, clears the color buffer, updates ImGui, updates the world, and swaps the front and back buffers of the window.
+        /// </summary>
+        /// <param name="e">The <see cref="FrameEventArgs"/> containing information about the frame.</param>
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
@@ -125,7 +134,10 @@ namespace Mundos
             }
         }
 
-        private List<Action> _imGuiRenderFunctions = new List<Action>();
+        /// <summary>
+        /// Registers a function to be called during ImGui rendering.
+        /// </summary>
+        /// <param name="function">The function to register.</param>
         public void RegisterImGuiRenderFunction(Action function)
         {
             _imGuiRenderFunctions.Add(function);
@@ -151,6 +163,9 @@ namespace Mundos
             }
         }
 
+        /// <summary>
+        /// Updates the world by executing the Update method of all the scripts in the world.
+        /// </summary>
         private void UpdateWorld()
         {
             var queryDesc = new QueryDescription().WithAny<Script>();
@@ -161,6 +176,10 @@ namespace Mundos
             }
         }
 
+        /// <summary>
+        /// Called when the window is resized.
+        /// </summary>
+        /// <param name="e">The event arguments containing the new width and height of the window.</param>
         protected override void OnResize(ResizeEventArgs e)
         {
             base.OnResize(e);
@@ -173,6 +192,10 @@ namespace Mundos
             _controller.WindowResized(ClientSize.X, ClientSize.Y);
         }
 
+        /// <summary>
+        /// Called when the frame is updated.
+        /// </summary>
+        /// <param name="e">The frame event arguments.</param>
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             base.OnUpdateFrame(e);
@@ -182,14 +205,14 @@ namespace Mundos
                 return;
             }
 
+            // Update the input state
             var input = KeyboardState;
-
-            if (input.IsKeyDown(Keys.Escape))
-            {
-                Close();
-            }
         }
 
+        /// <summary>
+        /// Handles the event when text input is received.
+        /// </summary>
+        /// <param name="e">The event arguments containing the text input data.</param>
         protected override void OnTextInput(TextInputEventArgs e)
         {
             base.OnTextInput(e);
@@ -197,6 +220,10 @@ namespace Mundos
             _controller.PressChar((char)e.Unicode);
         }
 
+        /// <summary>
+        /// Handles the mouse wheel event.
+        /// </summary>
+        /// <param name="e">The <see cref="MouseWheelEventArgs"/> containing the event data.</param>
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
             base.OnMouseWheel(e);
@@ -204,6 +231,10 @@ namespace Mundos
             _controller.MouseScroll(e.Offset);
         }
 
+        /// <summary>
+        /// Called when the renderer is being unloaded.
+        /// It is responsible for cleaning up the resources used by the renderer.
+        /// </summary>
         protected override void OnUnload()
         {
             base.OnUnload();
@@ -263,6 +294,10 @@ namespace Mundos
             GL.BindVertexArray(0);
         }
 
+        /// <summary>
+        /// Sets the vertical synchronization (VSync) for the renderer.
+        /// </summary>
+        /// <param name="enabled">A boolean value indicating whether VSync is enabled or disabled.</param>
         public void SetVSync(bool enabled)
         {
             if (enabled)
@@ -299,28 +334,39 @@ namespace Mundos
             return texture;
         }
 
+        /// <summary>
+        /// Resizes the framebuffer object (FBO) to the specified width and height.
+        /// </summary>
+        /// <param name="width">The new width of the FBO.</param>
+        /// <param name="height">The new height of the FBO.</param>
         public void FBOResize(int width, int height)
         {
+            // Replace the old texture with a new one
             GL.BindTexture(TextureTarget.Texture2D, _textureColorBuffer);
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, width, height, 0, PixelFormat.Rgb, PixelType.UnsignedByte, IntPtr.Zero);
             GL.BindTexture(TextureTarget.Texture2D, 0);
 
+            // Replace the old render buffer with a new one
             GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, _renderBufferObject);
             GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferStorage.Depth24Stencil8, width, height);
             GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, 0);
 
+            // Resize the framebuffer
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, _textureColorBuffer, 0);
             GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthStencilAttachment, RenderbufferTarget.Renderbuffer, _renderBufferObject);
 
+            // Check if the framebuffer is complete
             if (GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer) != FramebufferErrorCode.FramebufferComplete)
             {
                 Console.WriteLine("ERROR::FRAMEBUFFER:: Framebuffer resize failed!");
             }
 
+            // Update the camera aspect ratio
             EntityManager.GetActiveCamera(out Camera? camera);
             if (camera != null)
                 camera.AspectRatio = Size.X / (float)Size.Y;
 
+            // Update the ImGui controller
             _controller.WindowResized(ClientSize.X, ClientSize.Y);
         }
     }
