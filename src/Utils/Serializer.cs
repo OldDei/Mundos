@@ -5,6 +5,7 @@ using Arch.Core;
 using Arch.Core.Extensions;
 using System.ComponentModel;
 using Arch.Core.Utils;
+using System.Reflection;
 
 namespace Mundos
 {
@@ -58,7 +59,7 @@ namespace Mundos
                             entityData.Add("Mesh", componentData);
                             break;
                         case "Script":
-                            string? scriptName = ((Script)component).MundosScriptRef.ToString();
+                            string? scriptName = ((Script)component).MundosScriptRef.GetType().Name;
                             if (scriptName != null)
                                 entityData.Add("Script", scriptName);
                             else
@@ -104,7 +105,42 @@ namespace Mundos
             // Create the entities from the data
             foreach (Dictionary<string, object> entityData in entitiesData)
             {
-                // TODO: Create entities from data, after you're done with new UUIDs
+                Entity entity = newWorld.Create();
+
+                foreach (KeyValuePair<string, object> componentData in entityData)
+                {
+                    switch (componentData.Key)
+                    {
+                        case "UUID":
+                            entity.Add(new UUID(entity.Id, Guid.Parse((string)componentData.Value)));
+                            break;
+                        case "Position":
+                            string[] position = ((string)componentData.Value).Split(';');
+                            entity.Add(new Position(entity.Id, float.Parse(position[0]), float.Parse(position[1]), float.Parse(position[2])));
+                            break;
+                        case "Rotation":
+                            string[] rotation = ((string)componentData.Value).Split(';');
+                            entity.Add(new Rotation(entity.Id, float.Parse(rotation[0]), float.Parse(rotation[1]), float.Parse(rotation[2])));
+                            break;
+                        case "Scale":
+                            string[] scale = ((string)componentData.Value).Split(';');
+                            entity.Add(new Scale(entity.Id, float.Parse(scale[0]), float.Parse(scale[1]), float.Parse(scale[2])));
+                            break;
+                        case "Mesh":
+                            Dictionary<string, object> meshData = (Dictionary<string, object>)componentData.Value;
+                            entity.Add(new Mesh(entity.Id, (int)meshData["Mesh"], (int)meshData["Shader"]));
+                            break;
+                        case "Script":
+                            if ((string)componentData.Value != "null") {
+                                Type? scriptType = Type.GetType("Mundos." + (string)componentData.Value);
+                                TypeCode typeCode = Type.GetTypeCode(scriptType);
+                                // See if the Script manager knows about this script
+                                // TODO: make a script manager
+
+                            }
+                            break;
+                    }
+                }
             }
 
             return newWorld;
