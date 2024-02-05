@@ -15,8 +15,6 @@ namespace Mundos
             _world = World.Create();
         }
 
-
-
         /// <summary>
         /// Loads a world with the specified name.
         /// </summary>

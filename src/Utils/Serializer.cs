@@ -135,7 +135,7 @@ namespace Mundos
                                 Type? scriptType = Type.GetType("Mundos." + (string)componentData.Value);
                                 TypeCode typeCode = Type.GetTypeCode(scriptType);
                                 // See if the Script manager knows about this script
-                                // TODO: make a script manager
+                                // TODO: make a script manager class
 
                             }
                             break;
