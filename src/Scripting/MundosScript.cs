@@ -7,20 +7,20 @@ using OpenTK.Mathematics;
 /// </summary>
 public abstract class MundosScript
 {
-    public int entityID { get; set;} = 0; // ID of entity this component is attached to
+    public Entity parentEntity { get; set; } // Entity this component is attached to
     private Vector3 EntityPosition {
-        get => Mundos.EntityManager.GetEntity(entityID).Get<Position>().position;
-        set => Mundos.EntityManager.GetEntity(entityID).Set(new Position(entityID, value));
+        get => parentEntity.Get<Position>().position;
+        set => parentEntity.Set(new Position(parentEntity, value));
     }
     protected Vector3 position;
     private Vector3 EntityRotation {
-        get => Mundos.EntityManager.GetEntity(entityID).Get<Rotation>().rotation;
-        set => Mundos.EntityManager.GetEntity(entityID).Set(new Rotation(entityID, value));
+        get => parentEntity.Get<Rotation>().rotation;
+        set => parentEntity.Set(new Rotation(parentEntity, value));
     }
     protected Vector3 rotation;
     private Vector3 EntityScale {
-        get => Mundos.EntityManager.GetEntity(entityID).Get<Scale>().scale;
-        set => Mundos.EntityManager.GetEntity(entityID).Set(new Scale(entityID, value));
+        get => parentEntity.Get<Scale>().scale;
+        set => parentEntity.Set(new Scale(parentEntity, value));
     }
     protected Vector3 scale;
 

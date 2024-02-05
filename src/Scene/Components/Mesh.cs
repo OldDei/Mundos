@@ -1,3 +1,5 @@
+using Arch.Core;
+
 /// <summary>
 /// Represents a mesh component.
 /// </summary>
@@ -6,7 +8,7 @@ public struct Mesh
     /// <summary>
     /// The ID of the entity this component is attached to.
     /// </summary>
-    public int entityID;
+    public Entity ComponentEntity;
 
     /// <summary>
     /// The index of the mesh in the MeshManager.
@@ -24,10 +26,10 @@ public struct Mesh
     /// <param name="entityID">The ID of the entity.</param>
     /// <param name="meshIndex">The index of the mesh.</param>
     /// <param name="shaderIndex">The index of the shader.</param>
-    public Mesh(int entityID, int meshIndex, int shaderIndex)
+    public Mesh(Entity ComponentEntity, int meshIndex, int shaderIndex)
     {
         this.meshIndex = meshIndex;
-        this.entityID = entityID;
+        this.ComponentEntity = ComponentEntity;
         this.shaderIndex = shaderIndex;
     }
 
@@ -37,10 +39,10 @@ public struct Mesh
     /// <param name="entityID">The ID of the entity.</param>
     /// <param name="mesh">The mesh to copy the index from.</param>
     /// <param name="shaderIndex">The index of the shader.</param>
-    public Mesh(int entityID, Mesh mesh, int shaderIndex)
+    public Mesh(Entity ComponentEntity, Mesh mesh, int shaderIndex)
     {
         this.meshIndex = mesh.meshIndex;
-        this.entityID = entityID;
+        this.ComponentEntity = ComponentEntity;
         this.shaderIndex = shaderIndex;
     }
 }

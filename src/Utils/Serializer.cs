@@ -112,23 +112,23 @@ namespace Mundos
                     switch (componentData.Key)
                     {
                         case "UUID":
-                            entity.Add(new UUID(entity.Id, Guid.Parse((string)componentData.Value)));
+                            entity.Add(new UUID(entity, Guid.Parse((string)componentData.Value)));
                             break;
                         case "Position":
                             string[] position = ((string)componentData.Value).Split(';');
-                            entity.Add(new Position(entity.Id, float.Parse(position[0]), float.Parse(position[1]), float.Parse(position[2])));
+                            entity.Add(new Position(entity, float.Parse(position[0]), float.Parse(position[1]), float.Parse(position[2])));
                             break;
                         case "Rotation":
                             string[] rotation = ((string)componentData.Value).Split(';');
-                            entity.Add(new Rotation(entity.Id, float.Parse(rotation[0]), float.Parse(rotation[1]), float.Parse(rotation[2])));
+                            entity.Add(new Rotation(entity, float.Parse(rotation[0]), float.Parse(rotation[1]), float.Parse(rotation[2])));
                             break;
                         case "Scale":
                             string[] scale = ((string)componentData.Value).Split(';');
-                            entity.Add(new Scale(entity.Id, float.Parse(scale[0]), float.Parse(scale[1]), float.Parse(scale[2])));
+                            entity.Add(new Scale(entity, float.Parse(scale[0]), float.Parse(scale[1]), float.Parse(scale[2])));
                             break;
                         case "Mesh":
                             Dictionary<string, object> meshData = (Dictionary<string, object>)componentData.Value;
-                            entity.Add(new Mesh(entity.Id, (int)meshData["Mesh"], (int)meshData["Shader"]));
+                            entity.Add(new Mesh(entity, (int)meshData["Mesh"], (int)meshData["Shader"]));
                             break;
                         case "Script":
                             if ((string)componentData.Value != "null") {

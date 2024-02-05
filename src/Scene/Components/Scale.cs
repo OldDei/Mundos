@@ -1,3 +1,4 @@
+using Arch.Core;
 using OpenTK.Mathematics;
 
 /// <summary>
@@ -8,7 +9,7 @@ public struct Scale
     /// <summary>
     /// The ID of the entity this component is attached to.
     /// </summary>
-    public int entityID;
+    public Entity ComponentEntity;
 
     /// <summary>
     /// The scale vector.
@@ -22,10 +23,10 @@ public struct Scale
     /// <param name="x">The X scale value.</param>
     /// <param name="y">The Y scale value.</param>
     /// <param name="z">The Z scale value.</param>
-    public Scale(int entityID, float x, float y, float z)
+    public Scale(Entity ComponentEntity, float x, float y, float z)
     {
         this.scale = new Vector3(x, y, z);
-        this.entityID = entityID;
+        this.ComponentEntity = ComponentEntity;
     }
 
     /// <summary>
@@ -33,10 +34,10 @@ public struct Scale
     /// </summary>
     /// <param name="entityID">The ID of the entity this component is attached to.</param>
     /// <param name="scale">The scale vector.</param>
-    public Scale(int entityID, Vector3 scale)
+    public Scale(Entity ComponentEntity, Vector3 scale)
     {
         this.scale = scale;
-        this.entityID = entityID;
+        this.ComponentEntity = ComponentEntity;
     }
 
     /// <summary>
@@ -44,9 +45,9 @@ public struct Scale
     /// </summary>
     /// <param name="entityID">The ID of the entity this component is attached to.</param>
     /// <param name="scale">The other scale component.</param>
-    public Scale(int entityID, Scale scale)
+    public Scale(Entity ComponentEntity, Scale scale)
     {
         this.scale = scale.scale;
-        this.entityID = entityID;
+        this.ComponentEntity = ComponentEntity;
     }
 }

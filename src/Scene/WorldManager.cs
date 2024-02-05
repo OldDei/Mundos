@@ -28,10 +28,10 @@ namespace Mundos
             _world = World.Create();
 
             Entity groundEntity = EntityManager.Create(EntityManager.ArchetypeType.Model, "Ground");
-            groundEntity.Set(new UUID(groundEntity.Id, Guid.NewGuid()), new Position(groundEntity.Id,  0, -1f, 0), new Rotation(groundEntity.Id, 0, 0, 0), new Scale(groundEntity.Id, 5, 1, 5), new Mesh(groundEntity.Id, 1, 1));
+            groundEntity.Set(new UUID(groundEntity, Guid.NewGuid()), new Position(groundEntity,  0, -1f, 0), new Rotation(groundEntity, 0, 0, 0), new Scale(groundEntity, 5, 1, 5), new Mesh(groundEntity, 1, 1));
 
             Entity wallEntity = EntityManager.Create(EntityManager.ArchetypeType.Model, "Wall", groundEntity);
-            wallEntity.Set(new UUID(groundEntity.Id, Guid.NewGuid()), new Position(wallEntity.Id, 0, 0.5f, -0.5f), new Rotation(wallEntity.Id, 0, 0, 0), new Scale(wallEntity.Id, 1, 1, 1), new Mesh(wallEntity.Id, 0, 0));
+            wallEntity.Set(new UUID(wallEntity, Guid.NewGuid()), new Position(wallEntity, 0, 0.5f, -0.5f), new Rotation(wallEntity, 0, 0, 0), new Scale(wallEntity, 1, 1, 1), new Mesh(wallEntity, 0, 0));
 
             return true;
         }

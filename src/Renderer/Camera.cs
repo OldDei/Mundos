@@ -1,6 +1,8 @@
+using Arch.Core;
 using Arch.Core.Extensions;
 using OpenTK.Mathematics;
 using System;
+using System.Transactions;
 
 namespace Mundos
 {
@@ -12,7 +14,7 @@ namespace Mundos
     /// </summary>
     public class Camera
     {
-        public int entityID; // ID of entity this component is attached to
+        public Entity entity; // Entity this component is attached to
 
         // Those vectors are directions pointing outwards from the camera to define how it rotated.
         private Vector3 _front = -Vector3.UnitZ;
@@ -33,10 +35,10 @@ namespace Mundos
         // Camera is locked to cursor
         public bool Locked = false;
 
-        public Camera(int entityID, float aspectRatio)
+        public Camera(Entity entity, float aspectRatio)
         {
             this.AspectRatio = aspectRatio;
-            this.entityID = entityID;
+            this.entity = entity;
         }
 
         // This is simply the aspect ratio of the viewport, used for the projection matrix.
@@ -89,7 +91,7 @@ namespace Mundos
         // Get the view matrix using the amazing LookAt function described more in depth on the web tutorials
         public Matrix4 GetViewMatrix()
         {
-            Vector3 position = EntityManager.GetEntity(entityID).Get<Position>().position;
+            Vector3 position = entity.Get<Position>().position;
             UpdateVectors();
             return Matrix4.LookAt(position, position + _front, _up);
         }
@@ -108,7 +110,7 @@ namespace Mundos
         // This function is going to update the direction vertices using some of the math learned in the web tutorials.
         private void UpdateVectors()
         {
-            Vector3 rotation = EntityManager.GetEntity(entityID).Get<Rotation>().rotation;
+            Vector3 rotation = entity.Get<Rotation>().rotation;
             Pitch = rotation.X;
             Yaw = rotation.Y;
 

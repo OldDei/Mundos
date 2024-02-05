@@ -1,4 +1,5 @@
 using Arch.Core;
+using Arch.Core.Extensions;
 using Arch.Core.Utils;
 using ImGuiNET;
 
@@ -8,7 +9,7 @@ namespace Mundos {
     /// It provides methods for creating, retrieving, and destroying entities, as well as setting and getting the active camera.
     /// </summary>
     public static class EntityManager {
-        private static Dictionary<int, Entity> _entities = new Dictionary<int, Entity>(); // Contains all IDs and entities in the scene
+        private static Dictionary<UUID, Entity> _entities = new Dictionary<UUID, Entity>(); // Contains all IDs and entities in the scene
         private static Dictionary<Entity, string> _entityNames = new Dictionary<Entity, string>(); // Contains all entities and their names
         private static Dictionary<Entity, Entity> _entityParents = new Dictionary<Entity, Entity>(); // Contains all entities and their parents
         private static Dictionary<Entity, List<Entity>> _entityChildren = new Dictionary<Entity, List<Entity>>(); // Contains all entities and their children
@@ -17,9 +18,10 @@ namespace Mundos {
 
         static EntityManager() {
             // EntityManager will create a root node for the scene
-            _entities.Add(_root.Id, _root); // Add the root node to the entities list
+            _root.Add(new UUID(_root, Guid.NewGuid())); // Set a new UUID for the root node
+            _entities.Add(_root.Get<UUID>(), _root); // Add the root node to the entities list
             _entityNames.Add(_root, "Root"); // Add the root node to the names list
-            _entityParents.Add(_root, _entities[0]); // Add the root node to the parents list, the root node is its own parent
+            _entityParents.Add(_root, _entities[_root.Get<UUID>()]); // Add the root node to the parents list, the root node is its own parent
             _entityChildren.Add(_root, new List<Entity>()); // Add the root node to the children list
         }
 
@@ -33,7 +35,8 @@ namespace Mundos {
         public static Entity Create(ArchetypeType archetype, string name, Entity? parent = null) {
             Entity entity = WorldManager.World.Create(componentArchetypes[archetype]); // Create a new entity with the specified archetype
             Entity parentEntity = parent ?? _root; // If no parent is specified, use the root node
-            _entities.Add(entity.Id, entity); // Add this entity to the entities list
+            entity.Set(new UUID(entity, Guid.NewGuid())); // Set a new UUID for this entity
+            _entities.Add(entity.Get<UUID>(), entity); // Add this entity to the entities list
             _entityNames.Add(entity, name); // Add this entity to the names list
             _entityParents.Add(entity, parentEntity); // Add this entity to the parents list
             if (!_entityChildren.ContainsKey(parentEntity)) _entityChildren.Add(parentEntity, new List<Entity>()); // If the parent entity doesn't have any children, add an empty list
@@ -49,7 +52,8 @@ namespace Mundos {
         /// <returns>The created entity.</returns>
         public static Entity CreateNoRelation(ArchetypeType archetype, string name) {
             Entity entity = WorldManager.World.Create(componentArchetypes[archetype]); // Create a new entity with the specified archetype
-            _entities.Add(entity.Id, entity); // Add this entity to the entities list
+            entity.Set(new UUID(entity, Guid.NewGuid())); // Set a new UUID for this entity
+            _entities.Add(entity.Get<UUID>(), entity); // Add this entity to the entities list
             _entityNames.Add(entity, name); // Add this entity to the names list
             return entity;
         }
@@ -59,7 +63,7 @@ namespace Mundos {
         /// </summary>
         /// <param name="id">The ID of the entity to retrieve.</param>
         /// <returns>The entity with the specified ID.</returns>
-        public static Entity GetEntity(int id) {
+        public static Entity GetEntity(UUID id) {
             return _entities[id];
         }
 
@@ -76,7 +80,7 @@ namespace Mundos {
         /// Destroys an entity with the specified ID.
         /// </summary>
         /// <param name="id">The ID of the entity to destroy.</param>
-        public static void DestroyEntity(int id) {
+        public static void DestroyEntity(UUID id) {
             DestroyEntity(_entities[id]);
         }
 
@@ -89,7 +93,7 @@ namespace Mundos {
             _entityChildren.Remove(entity); // Remove this entity from the children list of its parent
             _entityNames.Remove(entity); // Remove this entity from the names list
             _entityParents.Remove(entity); // Remove this entity from the parents list
-            _entities.Remove(entity.Id); // Remove this entity from the entities list
+            _entities.Remove(entity.Get<UUID>()); // Remove this entity from the entities list
             WorldManager.World.Destroy(entity); // Destroy this entity
         }
 
@@ -114,7 +118,7 @@ namespace Mundos {
         /// <summary>
         /// Dictionary that contains all IDs and entities in the scene.
         /// </summary>
-        public static Dictionary<int, Entity> Entities { get => _entities; }
+        public static Dictionary<UUID, Entity> Entities { get => _entities; }
 
         /// <summary>
         /// Dictionary that contains all entities and their names.
@@ -142,10 +146,10 @@ namespace Mundos {
         /// </summary>
         public static Dictionary<ArchetypeType, ComponentType[]> componentArchetypes = new Dictionary<ArchetypeType, ComponentType[]>()
         {
-            { ArchetypeType.EmptyNode,  new ComponentType[]{ typeof(UUID), typeof(Position), typeof(Rotation), typeof(Scale)                                  } },
-            { ArchetypeType.Model,      new ComponentType[]{ typeof(UUID), typeof(Position), typeof(Rotation), typeof(Scale), typeof(Mesh)                    } },
-            { ArchetypeType.Camera,     new ComponentType[]{ typeof(UUID), typeof(Position), typeof(Rotation), typeof(Scale), typeof(Camera), typeof(Script)  } },
-            { ArchetypeType.Script,     new ComponentType[]{ typeof(UUID), typeof(Script)                                                                     } }
+            { ArchetypeType.EmptyNode,  new ComponentType[]{ typeof(Position), typeof(Rotation), typeof(Scale)                                  } },
+            { ArchetypeType.Model,      new ComponentType[]{ typeof(Position), typeof(Rotation), typeof(Scale), typeof(Mesh)                    } },
+            { ArchetypeType.Camera,     new ComponentType[]{ typeof(Position), typeof(Rotation), typeof(Scale), typeof(Camera), typeof(Script)  } },
+            { ArchetypeType.Script,     new ComponentType[]{ typeof(Script)                                                                     } }
         };
 
         /// <summary>
