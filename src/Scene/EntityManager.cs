@@ -1,6 +1,7 @@
 using Arch.Core;
 using Arch.Core.Extensions;
 using Arch.Core.Utils;
+using OpenTK.Mathematics;
 using ImGuiNET;
 
 namespace Mundos {
@@ -95,6 +96,33 @@ namespace Mundos {
             _entityParents.Remove(entity); // Remove this entity from the parents list
             _entities.Remove(entity.Get<UUID>()); // Remove this entity from the entities list
             WorldManager.World.Destroy(entity); // Destroy this entity
+        }
+
+        /// <summary>
+        /// Calculates the model matrix for the specified entity.
+        /// The model matrix is a transformation matrix that represents the position, rotation and scale of the entity.
+        /// The model matrix is calculated by multiplying the position, rotation and scale matrices together.
+        /// The resulting matrix includes all transformations due to rotation and scale of parents as well.
+        /// </summary>
+        /// <param name="entity">The entity for which to calculate the model matrix.</param>
+        /// <returns>The model matrix for the specified entity.</returns>
+        internal static Matrix4 GetModelMatrix(Entity entity)
+        {
+            Matrix4 modelMatrix = Matrix4.Identity;
+
+            // Apply own transformations
+            modelMatrix *= Matrix4.CreateScale(entity.Get<Scale>().scale);
+            modelMatrix *= Matrix4.CreateFromQuaternion(entity.Get<Rotation>().rotationQuaternion);
+            modelMatrix *= Matrix4.CreateTranslation(entity.Get<Position>().position);
+
+            // Apply parent transformations
+            Entity parent = EntityParents[entity];
+            while (parent != Root) {
+                modelMatrix *= GetModelMatrix(parent);
+                parent = EntityParents[parent];
+            }
+
+            return modelMatrix;
         }
 
         /// <summary>

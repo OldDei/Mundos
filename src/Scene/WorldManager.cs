@@ -1,7 +1,6 @@
 using Arch.Core;
 using Arch.Core.Extensions;
 using Arch.Core.Utils;
-using OpenTK.Mathematics;
 
 namespace Mundos
 {
@@ -43,33 +42,6 @@ namespace Mundos
         {
             Serializer.SaveWorld(v, _world);
             return false;
-        }
-
-        /// <summary>
-        /// Calculates the model matrix for the specified entity.
-        /// The model matrix is a transformation matrix that represents the position, rotation and scale of the entity.
-        /// The model matrix is calculated by multiplying the position, rotation and scale matrices together.
-        /// The resulting matrix includes all transformations due to rotation and scale of parents as well.
-        /// </summary>
-        /// <param name="entity">The entity for which to calculate the model matrix.</param>
-        /// <returns>The model matrix for the specified entity.</returns>
-        internal static Matrix4 GetModelMatrix(Entity entity)
-        {
-            Matrix4 modelMatrix = Matrix4.Identity;
-
-            // Apply own transformations
-            modelMatrix *= Matrix4.CreateScale(entity.Get<Scale>().scale);
-            modelMatrix *= Matrix4.CreateFromQuaternion(entity.Get<Rotation>().rotationQuaternion);
-            modelMatrix *= Matrix4.CreateTranslation(entity.Get<Position>().position);
-
-            // Apply parent transformations
-            Entity parent = EntityManager.EntityParents[entity];
-            while (parent != EntityManager.Root) {
-                modelMatrix *= GetModelMatrix(parent);
-                parent = EntityManager.EntityParents[parent];
-            }
-
-            return modelMatrix;
         }
 
         public static World World => _world;
