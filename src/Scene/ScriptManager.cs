@@ -6,13 +6,14 @@ namespace Mundos {
     internal class ScriptManager {
         private List<Script> scripts = new List<Script>();
 
-        public ScriptManager(string scriptsFolder) {
+        public ScriptManager(string? scriptsFolder) {
+            if (scriptsFolder == null) return;
+
             // Compile all scripts in the scripts folder
             CompileScripts(scriptsFolder);
 
             // Read all scripts from the scripts folder and folders inside it
             var scriptFiles = Directory.GetFiles(scriptsFolder, "*.dll", SearchOption.AllDirectories);
-
         }
 
         private void CompileScripts(string scriptsFolder)
