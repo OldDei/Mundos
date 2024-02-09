@@ -16,6 +16,15 @@ public struct Script
     public MundosScript MundosScriptRef;
 
     /// <summary>
+    /// Gets or sets a value indicating whether this <see cref="Script"/> is enabled.
+    /// </summary>
+    public bool enabled
+    {
+        get => enabled;
+        set => enabled = value;
+    }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="Script"/> struct.
     /// </summary>
     /// <param name="entityID">The ID of the entity to which the script is attached.</param>

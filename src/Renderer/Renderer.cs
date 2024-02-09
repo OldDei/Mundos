@@ -157,7 +157,7 @@ namespace Mundos
 
                 foreach (int i in chunk)
                 {
-                    Matrix4 model = WorldManager.GetModelMatrix(chunk.Entities[i]);
+                    Matrix4 model = EntityManager.GetModelMatrix(chunk.Entities[i]);
                     DrawMesh(meshes[i], model); // TODO: Instead submit the mesh to the renderer and let it draw it
                 }
             }

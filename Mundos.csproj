@@ -13,6 +13,7 @@
   <ItemGroup>
     <PackageReference Include="Arch" Version="1.2.7" />
     <PackageReference Include="ImGui.NET.Branches.Docking" Version="1.88.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.8.0" />
     <PackageReference Include="OpenTK" Version="4.8.1" />
     <PackageReference Include="StbImageSharp" Version="2.27.13" />
     <PackageReference Include="YamlDotNet" Version="15.1.0" />
