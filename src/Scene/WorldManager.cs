@@ -12,6 +12,8 @@ namespace Mundos
         {
             // WorldManager will always have at least an empty world
             _world = World.Create();
+
+            Console.WriteLine("WorldManager initialized.");;
         }
 
         /// <summary>

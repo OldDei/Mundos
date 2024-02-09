@@ -82,6 +82,8 @@ namespace Mundos {
                 0, 1, 2,
                 2, 3, 0
             });
+
+            Console.WriteLine("MeshManager initialized.");
         }
 
         /// <summary>
