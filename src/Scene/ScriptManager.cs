@@ -13,15 +13,17 @@ namespace Mundos {
             var scripts = Util.GetInheritedClasses(typeof(MundosScript), Assembly.GetEntryAssembly());
             foreach (var script in scripts) {
                 script_types.Add(script.Name, script);
-                Console.WriteLine($"ScriptManager: Loaded script {script.Name}");
+                Log.Debug($"ScriptManager: Loaded script {script.Name}");
             }
 
             // Load all scripts from the core assembly
             scripts = Util.GetInheritedClasses(typeof(MundosScript), Assembly.GetExecutingAssembly());
             foreach (var script in scripts) {
                 script_types.Add(script.Name, script);
-                Console.WriteLine($"ScriptManager: Loaded script {script.Name}");
+                Log.Debug($"ScriptManager: Loaded script {script.Name}");
             }
+
+            Log.Info($"ScriptManager: Loaded {script_types.Count} scripts");
         }
 
         public static void AddScript(Entity entity, MundosScript script) {

@@ -33,7 +33,7 @@ namespace Mundos
 
             _frameBufferShaderIndex = ShaderManager.NewShader("res/Shaders/shaderFramebuffer.vert", "res/Shaders/shaderFramebuffer.frag");
 
-            Console.WriteLine("Renderer initialized.");
+            Log.Info("Renderer initialized.");
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Mundos
 
             if (GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer) != FramebufferErrorCode.FramebufferComplete)
             {
-                Console.WriteLine("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
+                Log.Error("Framebuffer is not complete!");
             }
         }
 
@@ -257,7 +257,7 @@ namespace Mundos
 
             _controller.Dispose();
 
-            Console.WriteLine("Renderer unloaded.");
+            Log.Warning("Renderer unloaded.");
         }
 
         /// <summary>
@@ -342,7 +342,7 @@ namespace Mundos
             // Check if the framebuffer is complete
             if (GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer) != FramebufferErrorCode.FramebufferComplete)
             {
-                Console.WriteLine("ERROR::FRAMEBUFFER:: Framebuffer resize failed!");
+                Log.Error("Framebuffer is not complete!");
             }
 
             // Update the camera aspect ratio
