@@ -20,9 +20,14 @@ public struct Script
     /// </summary>
     public bool enabled
     {
-        get => enabled;
-        set => enabled = value;
+        get => isEnabled;
+        set {
+            isEnabled = value;
+            if (value) MundosScriptRef.OnEnable(); else MundosScriptRef.OnDisable();
+        }
     }
+
+    private bool isEnabled = true;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Script"/> struct.

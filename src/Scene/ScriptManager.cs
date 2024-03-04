@@ -5,7 +5,6 @@ using Arch.Core.Extensions;
 namespace Mundos {
 
     public static class ScriptManager {
-        private static Dictionary<string, Script> loaded_scripts = new Dictionary<string, Script>();
         public static Dictionary<string, Type> script_types = new Dictionary<string, Type>();
 
         static ScriptManager() {
@@ -27,29 +26,29 @@ namespace Mundos {
         }
 
         public static void AddScript(Entity entity, string script) {
-            if (script_types.ContainsKey(script)) {
-                AddScript(entity, (MundosScript)Activator.CreateInstance(script_types[script]));
+            if (script_types != null && script_types.ContainsKey(script)) {
+                var script_instance = (MundosScript?)Activator.CreateInstance(script_types[script]);
+                if (script_instance == null) {
+                    Log.Error($"ScriptManager: Failed to create instance of script {script}");
+                    return;
+                }
+                Script script_ref = new Script(entity, script_instance);
+                entity.Add(script_ref);
+                Log.Debug($"ScriptManager: Added script {script} to entity {entity.Get<UUID>().UniversalUniqueID}");
             } else {
                 Log.Error($"ScriptManager: Script {script} not found");
             }
         }
 
         public static void UpdateScripts() {
-            foreach (var script in loaded_scripts) {
-                if (script.Value.enabled) {
-                    script.Value.MundosScriptRef.OnUpdate();
-                }
+            // TODO: Fix me!
+            var queryDesc = new QueryDescription().WithAny<Script>();
+            foreach(Chunk chunk in WorldManager.World.Query(queryDesc))
+            {
+                Log.Debug($"Chunk size: {chunk.Size}");
+                Script[] scripts = chunk.GetArray<Script>();
+                Parallel.For(0, chunk.Size, i => {if (scripts[i].enabled) scripts[i].MundosScriptRef.Update();});
             }
-        }
-
-        public static void EnableScript(Script script) {
-            script.MundosScriptRef.OnEnable();
-            script.enabled = true;
-        }
-
-        public static void DisableScript(Script script) {
-            script.MundosScriptRef.OnDisable();
-            script.enabled = false;
         }
     }
 }

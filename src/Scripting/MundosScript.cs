@@ -12,17 +12,17 @@ public abstract class MundosScript
         get => parentEntity.Get<Position>().position;
         set => parentEntity.Set(new Position(parentEntity, value));
     }
-    protected Vector3 position;
+    protected Vector3 position; // Position of the entity this script is attached to
     private Vector3 EntityRotation {
         get => parentEntity.Get<Rotation>().rotation;
         set => parentEntity.Set(new Rotation(parentEntity, value));
     }
-    protected Vector3 rotation;
+    protected Vector3 rotation; // Rotation of the entity this script is attached to
     private Vector3 EntityScale {
         get => parentEntity.Get<Scale>().scale;
         set => parentEntity.Set(new Scale(parentEntity, value));
     }
-    protected Vector3 scale;
+    protected Vector3 scale; // Scale of the entity this script is attached to
 
     /// <summary>
     /// Called when the script is created.

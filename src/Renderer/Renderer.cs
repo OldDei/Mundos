@@ -168,12 +168,7 @@ namespace Mundos
         /// </summary>
         private void UpdateWorld()
         {
-            var queryDesc = new QueryDescription().WithAny<Script>();
-            foreach(Chunk chunk in WorldManager.World.Query(queryDesc))
-            {
-                Script[] scripts = chunk.GetArray<Script>();
-                Parallel.For(0, chunk.Size, i => scripts[i].MundosScriptRef.Update());
-            }
+            ScriptManager.UpdateScripts();
         }
 
         /// <summary>
