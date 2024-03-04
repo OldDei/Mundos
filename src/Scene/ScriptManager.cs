@@ -1,65 +1,57 @@
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
+using System.Reflection;
+using Arch.Core;
+using Arch.Core.Extensions;
 
 namespace Mundos {
 
-    internal class ScriptManager {
-        private List<Script> scripts = new List<Script>();
+    public static class ScriptManager {
+        private static Dictionary<string, Script> loaded_scripts = new Dictionary<string, Script>();
+        public static Dictionary<string, Type> script_types = new Dictionary<string, Type>();
 
-        public ScriptManager(string? scriptsFolder) {
-            if (scriptsFolder == null) return;
+        static ScriptManager() {
+            // Load all scripts from the application assembly
+            var scripts = Util.GetInheritedClasses(typeof(MundosScript), Assembly.GetEntryAssembly());
+            foreach (var script in scripts) {
+                script_types.Add(script.Name, script);
+                Console.WriteLine($"ScriptManager: Loaded script {script.Name}");
+            }
 
-            // Compile all scripts in the scripts folder
-            CompileScripts(scriptsFolder);
-
-            // Read all scripts from the scripts folder and folders inside it
-            var scriptFiles = Directory.GetFiles(scriptsFolder, "*.dll", SearchOption.AllDirectories);
+            // Load all scripts from the core assembly
+            scripts = Util.GetInheritedClasses(typeof(MundosScript), Assembly.GetExecutingAssembly());
+            foreach (var script in scripts) {
+                script_types.Add(script.Name, script);
+                Console.WriteLine($"ScriptManager: Loaded script {script.Name}");
+            }
         }
 
-        private void CompileScripts(string scriptsFolder)
-        {
-            Console.WriteLine("Compiling scripts...");
+        public static void AddScript(Entity entity, MundosScript script) {
+            var scriptComponent = new Script(entity, script);
+            loaded_scripts.Add(script.GetType().Name, scriptComponent);
+            entity.Set(scriptComponent);
+        }
 
-            var scriptFiles = Directory.GetFiles(scriptsFolder, "*.cs", SearchOption.AllDirectories);
-            foreach (var scriptFile in scriptFiles)
-            {
-                var script = CSharpScript.Create(File.ReadAllText(scriptFile));
-                var compilation = script.GetCompilation();
-                var result = compilation.Emit(Path.Combine(scriptsFolder, "Scripts.dll"));
-                if (!result.Success)
-                {
-                    foreach (var diagnostic in result.Diagnostics)
-                    {
-                        Console.WriteLine(diagnostic);
-                    }
+        public static void RemoveScript(Entity entity, Script script) {
+            if (script.enabled) script.MundosScriptRef.OnDestroy();
+
+            entity.Remove<Script>();
+
+            loaded_scripts.Remove(script.MundosScriptRef.GetType().Name);
+        }
+
+        public static void UpdateScripts() {
+            foreach (var script in loaded_scripts) {
+                if (script.Value.enabled) {
+                    script.Value.MundosScriptRef.OnUpdate();
                 }
             }
-
-            Console.WriteLine("Scripts compiled.");
         }
 
-        public void AddScript(Script script) {
-            script.MundosScriptRef.OnCreate();
-            scripts.Add(script);
-        }
-
-        public void RemoveScript(Script script) {
-            script.MundosScriptRef.OnDestroy();
-            scripts.Remove(script);
-        }
-
-        public void UpdateScripts() {
-            foreach (var script in scripts) {
-                if (script.enabled) script.MundosScriptRef.OnUpdate();
-            }
-        }
-
-        public void EnableScript(Script script) {
+        public static void EnableScript(Script script) {
             script.MundosScriptRef.OnEnable();
             script.enabled = true;
         }
 
-        public void DisableScript(Script script) {
+        public static void DisableScript(Script script) {
             script.MundosScriptRef.OnDisable();
             script.enabled = false;
         }
