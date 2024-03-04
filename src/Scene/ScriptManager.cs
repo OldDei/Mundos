@@ -35,18 +35,19 @@ namespace Mundos {
                 Script script_ref = new Script(entity, script_instance);
                 entity.Add(script_ref);
                 Log.Debug($"ScriptManager: Added script {script} to entity {entity.Get<UUID>().UniversalUniqueID}");
+                Log.Debug($"ScriptManager: Added script {script} to entity {entity.Id}");
             } else {
                 Log.Error($"ScriptManager: Script {script} not found");
             }
         }
 
         public static void UpdateScripts() {
-            // TODO: Fix me!
-            var queryDesc = new QueryDescription().WithAny<Script>();
+            var queryDesc = new QueryDescription().WithAll<Script>();
+
             foreach(Chunk chunk in WorldManager.World.Query(queryDesc))
             {
-                Log.Debug($"Chunk size: {chunk.Size}");
                 Script[] scripts = chunk.GetArray<Script>();
+
                 Parallel.For(0, chunk.Size, i => {if (scripts[i].enabled) scripts[i].MundosScriptRef.Update();});
             }
         }

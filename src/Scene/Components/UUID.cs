@@ -1,4 +1,5 @@
 using Arch.Core;
+using Mundos;
 
 /// <summary>
 /// Represents a unique UUID attached to an entity
@@ -18,11 +19,21 @@ public struct UUID
     /// <summary>
     /// Initializes a new instance of the <see cref="UUID"/> struct.
     /// </summary>
+    /// <param name="ComponentEntity">The entity this component is attached to.</param>
     /// <param name="UUID">The UUID of the entity.</param>
-    /// <param name="script">The script object.</param>
     public UUID(Entity ComponentEntity, Guid UUID)
     {
         this.ComponentEntity = ComponentEntity;
         this.UniversalUniqueID = UUID;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UUID"/> struct.
+    /// </summary>
+    /// <param name="ComponentEntity">The entity this component is attached to.</param>
+    public UUID(Entity ComponentEntity)
+    {
+        this.ComponentEntity = ComponentEntity;
+        this.UniversalUniqueID = Guid.NewGuid();
     }
 }
