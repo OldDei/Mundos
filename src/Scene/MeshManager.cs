@@ -83,7 +83,7 @@ namespace Mundos {
                 2, 3, 0
             });
 
-            Log.Info("MeshManager initialized.");
+            Log.Info("MeshManager: MeshManager initialized.");
         }
 
         /// <summary>

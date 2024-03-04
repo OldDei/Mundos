@@ -26,18 +26,12 @@ namespace Mundos {
             Log.Info($"ScriptManager: Loaded {script_types.Count} scripts");
         }
 
-        public static void AddScript(Entity entity, MundosScript script) {
-            var scriptComponent = new Script(entity, script);
-            loaded_scripts.Add(script.GetType().Name, scriptComponent);
-            entity.Set(scriptComponent);
-        }
-
-        public static void RemoveScript(Entity entity, Script script) {
-            if (script.enabled) script.MundosScriptRef.OnDestroy();
-
-            entity.Remove<Script>();
-
-            loaded_scripts.Remove(script.MundosScriptRef.GetType().Name);
+        public static void AddScript(Entity entity, string script) {
+            if (script_types.ContainsKey(script)) {
+                AddScript(entity, (MundosScript)Activator.CreateInstance(script_types[script]));
+            } else {
+                Log.Error($"ScriptManager: Script {script} not found");
+            }
         }
 
         public static void UpdateScripts() {

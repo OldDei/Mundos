@@ -25,7 +25,7 @@ namespace Mundos {
             _entityParents.Add(_root, _entities[_root.Get<UUID>()]); // Add the root node to the parents list, the root node is its own parent
             _entityChildren.Add(_root, new List<Entity>()); // Add the root node to the children list
 
-            Log.Info("EntityManager initialized.");
+            Log.Info("EntityManager: EntityManager initialized.");
         }
 
         /// <summary>

@@ -14,7 +14,7 @@ namespace Mundos {
             int shaderG = NewShader("res/Shaders/shaderDefault.vert", "res/Shaders/shaderDefault.frag");
             shaders[shaderG].SetVector4("defaultColor", new Vector4(0.2f, 0.8f, 0.2f, 1.0f));
 
-            Log.Info("ShaderManager initialized.");
+            Log.Info("ShaderManager: ShaderManager initialized.");
         }
 
         internal static Shader GetShader(int id) {
