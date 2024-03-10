@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Arch.Core;
 using Arch.Core.Extensions;
 
@@ -27,28 +28,26 @@ namespace Mundos {
 
         public static void AddScript(Entity entity, string script) {
             if (script_types != null && script_types.ContainsKey(script)) {
-                var script_instance = (MundosScript?)Activator.CreateInstance(script_types[script]);
+                MundosScript? script_instance = (MundosScript?)Activator.CreateInstance(script_types[script]);
                 if (script_instance == null) {
                     Log.Error($"ScriptManager: Failed to create instance of script {script}");
                     return;
                 }
-                Script script_ref = new Script(entity, script_instance);
-                entity.Add(script_ref);
-                Log.Debug($"ScriptManager: Added script {script} to entity {entity.Get<UUID>().UniversalUniqueID}");
-                Log.Debug($"ScriptManager: Added script {script} to entity {entity.Id}");
+                entity.Add(new Script(entity, script_instance));
             } else {
                 Log.Error($"ScriptManager: Script {script} not found");
             }
         }
 
         public static void UpdateScripts() {
-            var queryDesc = new QueryDescription().WithAll<Script>();
-
-            foreach(Chunk chunk in WorldManager.World.Query(queryDesc))
-            {
-                Script[] scripts = chunk.GetArray<Script>();
-
-                Parallel.For(0, chunk.Size, i => {if (scripts[i].enabled) scripts[i].MundosScriptRef.Update();});
+            QueryDescription queryDesc = new QueryDescription().WithAll<Script>();
+            foreach (var chunk in WorldManager.World.Query(queryDesc)) {
+                var scriptArray = chunk.GetArray<Script>();
+                foreach (var script in scriptArray) {
+                    if (script.enabled) {
+                        script.MundosScriptRef.Update();
+                    }
+                }
             }
         }
     }
